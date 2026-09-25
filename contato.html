@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <meta name="theme-color" content="#FF7A00" />
+  <title>Contato & Plantão de Atendimento | Imobiliária Meridional Uberaba</title>
+
+  <!-- PWA & Favicon -->
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/png" href="https://meridional.imb.br/images/favicon.png" />
+  <link rel="apple-touch-icon" href="https://meridional.imb.br/images/favicon.png" />
+
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <!-- Top Institutional Bar -->
+  <div class="top-institutional-bar">
+    <div class="container top-bar-inner">
+      <div class="top-bar-info">
+        <span><i class="fa-solid fa-location-dot" style="color: var(--primary);"></i> Praça Dom Eduardo, 470 – Mercês, Uberaba - MG</span>
+        <span><i class="fa-solid fa-id-card" style="color: var(--primary);"></i> CRECI 12.632 / CNAI</span>
+      </div>
+      <div class="top-bar-info">
+        <span><i class="fa-solid fa-phone" style="color: var(--primary);"></i> (34) 3312-6702</span>
+        <span><i class="fa-brands fa-whatsapp" style="color: #25D366;"></i> Plantão: (34) 9960-4600</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Site Header -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="brand-logo-wrap">
+        <img src="https://meridional.imb.br/meridional.png" alt="Imobiliária Meridional Uberaba" class="brand-logo-img" />
+        <span class="brand-tag-since">Desde 1990</span>
+      </a>
+
+      <!-- Desktop Navigation -->
+      <nav class="desktop-nav">
+        <a href="index.html" class="nav-link">Início</a>
+        <a href="imoveis.html" class="nav-link">Imóveis</a>
+        <a href="imoveis.html?finalidade=venda" class="nav-link">Venda</a>
+        <a href="imoveis.html?finalidade=aluguel" class="nav-link">Aluguel</a>
+        <a href="imoveis.html?tipo=damha" class="nav-link">Condomínios Damha</a>
+        <a href="sobre.html" class="nav-link">Sobre Nós</a>
+        <a href="anunciar.html" class="nav-link">Cadastre seu Imóvel</a>
+        <a href="contato.html" class="nav-link active">Contato</a>
+      </nav>
+
+      <!-- Header Actions -->
+      <div class="header-actions">
+        <button id="themeToggleBtn" class="btn-icon-circle" onclick="window.meridionalApp.toggleTheme()" title="Alternar Modo Escuro / Claro" aria-label="Alternar Tema">
+          <i class="fa-solid fa-moon"></i>
+        </button>
+        <a href="favoritos.html" class="btn-icon-circle" style="position: relative;" title="Meus Favoritos" aria-label="Ver Favoritos">
+          <i class="fa-solid fa-heart" style="color: #EF4444;"></i>
+          <span class="badge-count favorites-badge-count" style="display: none;">0</span>
+        </a>
+        <a href="https://api.whatsapp.com/send?phone=553499604600&text=Ol%C3%A1!%20Gostaria%20de%20atendimento%20da%20Meridional." target="_blank" class="btn-header-cta">
+          <i class="fa-brands fa-whatsapp"></i> Plantão WhatsApp
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Contato -->
+  <section style="background: var(--dark-header); color: #fff; padding: 3rem 0; border-bottom: 1px solid rgba(255,255,255,0.08);">
+    <div class="container text-center" style="max-width: 700px; margin: 0 auto;">
+      <div class="hero-pill" style="margin-bottom: 0.75rem;">
+        <i class="fa-solid fa-headset"></i> Canais Oficiais de Atendimento
+      </div>
+      <h1 style="font-size: 2.3rem; font-weight: 800; letter-spacing: -0.02em; color: #fff; margin-bottom: 0.5rem;">
+        Fale com Nossos Corretores
+      </h1>
+      <p style="color: #94A3B8; font-size: 1rem;">
+        Estamos prontos para atender você com agilidade e cordialidade pelo WhatsApp, telefone ou presencialmente em nossa sede.
+      </p>
+    </div>
+  </section>
+
+  <!-- Main Contato Cards & Form -->
+  <main class="container section-padding">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 3.5rem;">
+      <!-- Card WhatsApp Plantão -->
+      <a href="https://api.whatsapp.com/send?phone=553499604600&text=Ol%C3%A1!%20Gostaria%20de%20atendimento%20do%20plant%C3%A3o%20de%20vendas." target="_blank" style="background: var(--bg-card); padding: 2rem; border-radius: var(--radius-xl); border: 2px solid #25D366; box-shadow: var(--shadow-md); display: flex; flex-direction: column; align-items: center; text-align: center; transition: transform 0.2s ease;">
+        <div style="width: 60px; height: 60px; border-radius: 50%; background: #E8F5E9; color: #25D366; display: flex; align-items: center; justify-content: center; font-size: 2rem; margin-bottom: 1rem;">
+          <i class="fa-brands fa-whatsapp"></i>
+        </div>
+        <h3 style="font-size: 1.25rem; font-weight: 800; margin-bottom: 0.35rem;">Plantão no WhatsApp</h3>
+        <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 1rem;">Atendimento rápido para dúvidas, visitas e agendamentos.</p>
+        <span style="font-size: 1.15rem; font-weight: 800; color: #25D366;">(34) 9960-4600</span>
+      </a>
+
+      <!-- Card Telefone Fixo -->
+      <a href="tel:3433126702" style="background: var(--bg-card); padding: 2rem; border-radius: var(--radius-xl); border: 1px solid var(--border-light); box-shadow: var(--shadow-sm); display: flex; flex-direction: column; align-items: center; text-align: center; transition: transform 0.2s ease;">
+        <div style="width: 60px; height: 60px; border-radius: 50%; background: var(--primary-light); color: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 1.8rem; margin-bottom: 1rem;">
+          <i class="fa-solid fa-phone"></i>
+        </div>
+        <h3 style="font-size: 1.25rem; font-weight: 800; margin-bottom: 0.35rem;">Telefone da Sede</h3>
+        <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 1rem;">Atendimento de Segunda a Sexta das 08h às 18h.</p>
+        <span style="font-size: 1.15rem; font-weight: 800; color: var(--text-main);">(34) 3312-6702</span>
+      </a>
+
+      <!-- Card Sede Presencial -->
+      <div style="background: var(--bg-card); padding: 2rem; border-radius: var(--radius-xl); border: 1px solid var(--border-light); box-shadow: var(--shadow-sm); display: flex; flex-direction: column; align-items: center; text-align: center;">
+        <div style="width: 60px; height: 60px; border-radius: 50%; background: var(--bg-card-subtle); color: var(--text-main); display: flex; align-items: center; justify-content: center; font-size: 1.8rem; margin-bottom: 1rem;">
+          <i class="fa-solid fa-location-dot" style="color: var(--primary);"></i>
+        </div>
+        <h3 style="font-size: 1.25rem; font-weight: 800; margin-bottom: 0.35rem;">Nossa Sede Própria</h3>
+        <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 0.5rem;">Praça Dom Eduardo, 470 – Mercês</p>
+        <span style="font-size: 0.85rem; font-weight: 700; color: var(--primary);">Uberaba - MG | CEP 38060-280</span>
+      </div>
+    </div>
+
+    <!-- Quick Form de Contato Simplificado (2 Campos) -->
+    <div style="max-width: 680px; margin: 0 auto; background: var(--bg-card); border-radius: var(--radius-xl); padding: 2.5rem; border: 1px solid var(--border-light); box-shadow: var(--shadow-xl);">
+      <div style="text-align: center; margin-bottom: 1.75rem;">
+        <h2 style="font-size: 1.65rem; font-weight: 800; margin-bottom: 0.35rem;">Envie uma Mensagem Rápida</h2>
+        <p style="color: var(--text-muted); font-size: 0.92rem;">Preencha abaixo e entraremos em contato diretamente pelo seu WhatsApp.</p>
+      </div>
+
+      <form id="quickContactForm" style="display: flex; flex-direction: column; gap: 1rem;">
+        <div>
+          <label style="font-size: 0.82rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.35rem; display: block;">Seu Nome Completo</label>
+          <input type="text" id="contactName" required placeholder="Como podemos te chamar?" class="search-input" style="height: 50px; background: var(--bg-card-subtle);" />
+        </div>
+
+        <div>
+          <label style="font-size: 0.82rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.35rem; display: block;">Seu WhatsApp (com DDD)</label>
+          <input type="tel" id="contactPhone" required placeholder="(34) 99999-9999" class="search-input" style="height: 50px; background: var(--bg-card-subtle);" />
+        </div>
+
+        <div>
+          <label style="font-size: 0.82rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 0.35rem; display: block;">Como podemos ajudar?</label>
+          <select id="contactSubject" class="search-select" style="height: 50px; background: var(--bg-card-subtle);">
+            <option value="Quero Comprar um Imóvel">Quero Comprar um Imóvel</option>
+            <option value="Quero Alugar um Imóvel">Quero Alugar um Imóvel</option>
+            <option value="Quero Anunciar meu Imóvel">Quero Anunciar meu Imóvel</option>
+            <option value="Avaliação Imobiliária / Laudo Pericial">Avaliação Imobiliária / Laudo Pericial</option>
+            <option value="Outro Assunto">Outro Assunto</option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn-search-submit" style="margin-top: 0.5rem; height: 52px; font-size: 1.05rem;">
+          <i class="fa-brands fa-whatsapp"></i> Iniciar Conversa no WhatsApp
+        </button>
+      </form>
+    </div>
+  </main>
+
+  <!-- Mobile Bottom Navigation Bar -->
+  <nav class="mobile-bottom-nav">
+    <a href="index.html" class="bottom-nav-item">
+      <i class="fa-solid fa-house"></i>
+      <span>Início</span>
+    </a>
+    <a href="imoveis.html" class="bottom-nav-item">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <span>Buscar</span>
+    </a>
+    <a href="favoritos.html" class="bottom-nav-item">
+      <i class="fa-solid fa-heart"></i>
+      <span>Favoritos</span>
+      <span class="badge-count favorites-badge-count" style="display: none;">0</span>
+    </a>
+    <a href="anunciar.html" class="bottom-nav-item">
+      <i class="fa-solid fa-circle-plus"></i>
+      <span>Anunciar</span>
+    </a>
+    <a href="https://api.whatsapp.com/send?phone=553499604600&text=Ol%C3%A1!%20Gostaria%20de%20atendimento%20imobili%C3%A1rio." target="_blank" class="bottom-nav-item active">
+      <i class="fa-brands fa-whatsapp" style="color: #25D366;"></i>
+      <span>WhatsApp</span>
+    </a>
+  </nav>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="brand-logo-wrap" style="margin-bottom: 1rem;">
+            <img src="https://meridional.imb.br/meridional.png" alt="Meridional" class="brand-logo-img" />
+          </div>
+          <p style="font-size: 0.9rem; line-height: 1.6; margin-bottom: 1.25rem;">
+            A <strong>Meridional Corretores Associados</strong> atua desde 1990 com excelência, ética e tradição no mercado imobiliário de Uberaba - MG.
+          </p>
+        </div>
+
+        <div>
+          <h4 class="footer-title">Imóveis em Uberaba</h4>
+          <ul class="footer-links">
+            <li><a href="imoveis.html?finalidade=venda" class="footer-link">Imóveis à Venda</a></li>
+            <li><a href="imoveis.html?finalidade=aluguel" class="footer-link">Imóveis para Alugar</a></li>
+            <li><a href="imoveis.html?tipo=damha" class="footer-link">Condomínios Damha</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-title">Institucional</h4>
+          <ul class="footer-links">
+            <li><a href="sobre.html" class="footer-link">Nossa História (35 Anos)</a></li>
+            <li><a href="sobre.html#perito" class="footer-link">Perícia & Avaliação Judicial</a></li>
+            <li><a href="contato.html" class="footer-link">Fale Conosco / Plantão</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-title">Atendimento & Sede</h4>
+          <p style="font-size: 0.88rem; line-height: 1.6; margin-bottom: 0.65rem;">
+            <i class="fa-solid fa-location-dot" style="color: var(--primary);"></i> Praça Dom Eduardo, 470 – Mercês<br />
+            CEP 38060-280 — Uberaba / MG
+          </p>
+          <p style="font-size: 0.88rem; line-height: 1.6;">
+            <i class="fa-solid fa-phone" style="color: var(--primary);"></i> (34) 3312-6702<br />
+            <i class="fa-brands fa-whatsapp" style="color: #25D366;"></i> Plantão: (34) 9960-4600
+          </p>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>© 2026 Imobiliária Meridional — Todos os direitos reservados. CRECI 12.632/MG.</p>
+        <p>Praça Dom Eduardo, 470 – Mercês, Uberaba – MG</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('quickContactForm');
+      if (form) {
+        form.addEventListener('submit', (e) => {
+          e.preventDefault();
+          const name = document.getElementById('contactName').value;
+          const phone = document.getElementById('contactPhone').value;
+          const subject = document.getElementById('contactSubject').value;
+          const msg = `Ol%C3%A1!%20Meu%20nome%20%C3%A9%20${encodeURIComponent(name)}%20(Telefone:%20${encodeURIComponent(phone)})%20e%20gostaria%20de%20informa%C3%A7%C3%B5es%20sobre:%20${encodeURIComponent(subject)}.`;
+          window.open(`https://api.whatsapp.com/send?phone=553499604600&text=${msg}`, '_blank');
+        });
+      }
+    });
+  </script>
+</body>
+</html>

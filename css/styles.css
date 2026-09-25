@@ -1807,17 +1807,536 @@ h1, h2, h3, h4, h5, h6 {
     color: #000 !important;
     padding: 0 !important;
   }
-  .site-header, .site-footer, .mobile-bottom-nav, .floating-whatsapp, .btn-scroll-top, .search-card-wrapper, .comparator-bar {
+  .site-header, .site-footer, .mobile-bottom-nav, .floating-whatsapp, .btn-scroll-top, .search-card-wrapper, .comparator-bar, .property-sticky-mobile-cta {
     display: none !important;
   }
-  .modal-overlay {
-    position: static !important;
-    background: none !important;
-    opacity: 1 !important;
-    visibility: visible !important;
-  }
-  .modal-sheet {
-    box-shadow: none !important;
-    max-height: none !important;
+}
+
+/* ==========================================================================
+   Página Individual do Imóvel (imovel.html) & Galeria Lightbox
+   ========================================================================== */
+
+.property-detail-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+}
+
+@media (min-width: 1024px) {
+  .property-detail-layout {
+    grid-template-columns: 1.8fr 1fr;
+    gap: 2.5rem;
+    align-items: start;
   }
 }
+
+/* Property Main Gallery */
+.property-gallery-box {
+  background: var(--bg-card);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-md);
+  margin-bottom: 2rem;
+}
+
+.gallery-main-img-wrap {
+  position: relative;
+  aspect-ratio: 16 / 10;
+  cursor: pointer;
+  overflow: hidden;
+  background: #E2E8F0;
+}
+
+.gallery-main-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.gallery-main-img-wrap:hover .gallery-main-img {
+  transform: scale(1.03);
+}
+
+.gallery-btn-expand {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  background: rgba(19, 19, 22, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-full);
+  font-size: 0.85rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  z-index: 5;
+  transition: all 0.2s ease;
+}
+
+.gallery-btn-expand:hover {
+  background: var(--primary);
+  border-color: var(--primary);
+}
+
+.gallery-thumbs-row {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  overflow-x: auto;
+  background: var(--bg-card-subtle);
+  border-top: 1px solid var(--border-light);
+}
+
+.gallery-thumb-item {
+  width: 80px;
+  height: 60px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px solid transparent;
+  flex-shrink: 0;
+  opacity: 0.65;
+  transition: all 0.2s ease;
+}
+
+.gallery-thumb-item.active, .gallery-thumb-item:hover {
+  border-color: var(--primary);
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+.gallery-thumb-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Property Info Card & Details */
+.property-info-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-xl);
+  padding: 1.75rem;
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 1.75rem;
+}
+
+@media (min-width: 768px) {
+  .property-info-card {
+    padding: 2.25rem;
+  }
+}
+
+.property-code-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--primary-light);
+  color: var(--primary);
+  font-weight: 800;
+  font-size: 0.9rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--radius-full);
+  margin-bottom: 0.75rem;
+  cursor: pointer;
+  border: 1px solid rgba(255, 122, 0, 0.2);
+  transition: all 0.2s ease;
+}
+
+.property-code-badge:hover {
+  background: var(--primary);
+  color: #fff;
+}
+
+.property-main-title {
+  font-size: 1.85rem;
+  font-weight: 800;
+  color: var(--text-main);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.5rem;
+}
+
+@media (min-width: 768px) {
+  .property-main-title {
+    font-size: 2.3rem;
+  }
+}
+
+.property-location-tag {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--text-muted);
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+.property-location-tag i {
+  color: var(--primary);
+}
+
+.property-price-box {
+  background: var(--bg-card-subtle);
+  border-radius: var(--radius-lg);
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.75rem;
+  border: 1px solid var(--border-light);
+}
+
+.property-price-main {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--primary);
+  font-family: var(--font-heading);
+  letter-spacing: -0.02em;
+}
+
+.property-fees-row {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 0.35rem;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.property-specs-grid-lg {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+@media (min-width: 640px) {
+  .property-specs-grid-lg {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+.spec-box-item {
+  background: var(--bg-card-subtle);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  padding: 1rem 0.75rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.25rem;
+}
+
+.spec-box-item i {
+  color: var(--primary);
+  font-size: 1.35rem;
+}
+
+.spec-box-val {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.spec-box-lbl {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.property-features-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+}
+
+@media (min-width: 640px) {
+  .property-features-list {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.feature-pill-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.feature-pill-item i {
+  color: #25D366;
+  font-size: 1rem;
+}
+
+/* Corretor Specialist Sidebar Card */
+.agent-contact-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-xl);
+  padding: 1.75rem;
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-lg);
+  position: sticky;
+  top: calc(var(--header-height) + 1.5rem);
+}
+
+.agent-profile-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.agent-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--primary);
+}
+
+.agent-name {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.agent-role {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.agent-creci {
+  font-size: 0.75rem;
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.btn-agent-whatsapp {
+  width: 100%;
+  height: 52px;
+  background: var(--gradient-secondary);
+  color: #fff;
+  font-weight: 800;
+  font-size: 1rem;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  box-shadow: 0 4px 14px rgba(100, 163, 10, 0.35);
+  margin-bottom: 0.75rem;
+  transition: all 0.25s ease;
+}
+
+.btn-agent-whatsapp:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(100, 163, 10, 0.45);
+}
+
+.btn-agent-call {
+  width: 100%;
+  height: 48px;
+  background: var(--bg-card-subtle);
+  color: var(--text-main);
+  font-weight: 700;
+  font-size: 0.95rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-light);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.btn-agent-call:hover {
+  background: var(--primary-light);
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+/* Sticky Mobile Bottom CTA Bar on Property Page */
+.property-sticky-mobile-cta {
+  position: fixed;
+  bottom: var(--bottom-nav-height);
+  left: 0;
+  right: 0;
+  background: var(--bg-card);
+  border-top: 1px solid var(--border-light);
+  padding: 0.75rem 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  z-index: 990;
+  box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.08);
+}
+
+@media (min-width: 1024px) {
+  .property-sticky-mobile-cta {
+    display: none;
+  }
+}
+
+.sticky-price-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.sticky-price-label {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.sticky-price-val {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--primary);
+  font-family: var(--font-heading);
+}
+
+.sticky-action-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-sticky-call {
+  height: 42px;
+  padding: 0 0.85rem;
+  background: var(--bg-card-subtle);
+  color: var(--text-main);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-md);
+  font-weight: 700;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.btn-sticky-whatsapp {
+  height: 42px;
+  padding: 0 1.15rem;
+  background: #25D366;
+  color: #fff;
+  border-radius: var(--radius-md);
+  font-weight: 800;
+  font-size: 0.88rem;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  box-shadow: 0 3px 10px rgba(37, 211, 102, 0.3);
+}
+
+/* Fullscreen Photo Lightbox */
+.lightbox-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.95);
+  z-index: 4000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.lightbox-overlay.active {
+  display: flex;
+}
+
+.lightbox-content {
+  position: relative;
+  max-width: 90vw;
+  max-height: 85vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.lightbox-content img {
+  max-width: 100%;
+  max-height: 85vh;
+  object-fit: contain;
+  border-radius: var(--radius-sm);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+}
+
+.lightbox-close-btn {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.lightbox-close-btn:hover {
+  background: var(--primary);
+}
+
+.lightbox-counter {
+  position: absolute;
+  bottom: -2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #fff;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.lightbox-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.lightbox-nav-btn:hover {
+  background: var(--primary);
+}
+
+.lightbox-nav-btn.prev {
+  left: -4rem;
+}
+
+.lightbox-nav-btn.next {
+  right: -4rem;
+}
+
+@media (max-width: 768px) {
+  .lightbox-nav-btn.prev { left: 0.5rem; }
+  .lightbox-nav-btn.next { right: 0.5rem; }
+}
+

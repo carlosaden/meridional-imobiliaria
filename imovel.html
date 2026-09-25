@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <meta name="theme-color" content="#FF7A00" />
+  <title>Detalhes do Imóvel | Imobiliária Meridional Uberaba</title>
+
+  <!-- PWA & Favicon -->
+  <link rel="manifest" href="manifest.json" />
+  <link rel="icon" type="image/png" href="https://meridional.imb.br/images/favicon.png" />
+  <link rel="apple-touch-icon" href="https://meridional.imb.br/images/favicon.png" />
+
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <!-- Top Institutional Bar -->
+  <div class="top-institutional-bar">
+    <div class="container top-bar-inner">
+      <div class="top-bar-info">
+        <span><i class="fa-solid fa-location-dot" style="color: var(--primary);"></i> Praça Dom Eduardo, 470 – Mercês, Uberaba - MG</span>
+        <span><i class="fa-solid fa-id-card" style="color: var(--primary);"></i> CRECI 12.632 / CNAI</span>
+      </div>
+      <div class="top-bar-info">
+        <span><i class="fa-solid fa-phone" style="color: var(--primary);"></i> (34) 3312-6702</span>
+        <span><i class="fa-brands fa-whatsapp" style="color: #25D366;"></i> Plantão: (34) 9960-4600</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Site Header -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="brand-logo-wrap">
+        <img src="https://meridional.imb.br/meridional.png" alt="Imobiliária Meridional Uberaba" class="brand-logo-img" />
+        <span class="brand-tag-since">Desde 1990</span>
+      </a>
+
+      <!-- Desktop Navigation -->
+      <nav class="desktop-nav">
+        <a href="index.html" class="nav-link">Início</a>
+        <a href="imoveis.html" class="nav-link active">Imóveis</a>
+        <a href="imoveis.html?finalidade=venda" class="nav-link">Venda</a>
+        <a href="imoveis.html?finalidade=aluguel" class="nav-link">Aluguel</a>
+        <a href="imoveis.html?tipo=damha" class="nav-link">Condomínios Damha</a>
+        <a href="sobre.html" class="nav-link">Sobre Nós</a>
+        <a href="anunciar.html" class="nav-link">Cadastre seu Imóvel</a>
+        <a href="contato.html" class="nav-link">Contato</a>
+      </nav>
+
+      <!-- Header Actions -->
+      <div class="header-actions">
+        <button id="themeToggleBtn" class="btn-icon-circle" onclick="window.meridionalApp.toggleTheme()" title="Alternar Modo Escuro / Claro" aria-label="Alternar Tema">
+          <i class="fa-solid fa-moon"></i>
+        </button>
+        <a href="favoritos.html" class="btn-icon-circle" style="position: relative;" title="Meus Favoritos" aria-label="Ver Favoritos">
+          <i class="fa-solid fa-heart" style="color: #EF4444;"></i>
+          <span class="badge-count favorites-badge-count" style="display: none;">0</span>
+        </a>
+        <a href="https://api.whatsapp.com/send?phone=553499604600&text=Ol%C3%A1!%20Gostaria%20de%20atendimento%20da%20Meridional." target="_blank" class="btn-header-cta">
+          <i class="fa-brands fa-whatsapp"></i> Plantão WhatsApp
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Property Detail View Container -->
+  <main class="container section-padding" id="propertyDetailPage" style="padding-top: 1.5rem; min-height: 70vh;">
+    <!-- Breadcrumbs -->
+    <div class="breadcrumbs-row" style="margin-bottom: 1.25rem; font-size: 0.88rem; color: var(--text-muted); display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+      <a href="index.html" style="color: var(--text-muted);"><i class="fa-solid fa-house"></i> Início</a>
+      <span>/</span>
+      <a href="imoveis.html" style="color: var(--text-muted);">Imóveis em Uberaba</a>
+      <span>/</span>
+      <span id="breadcrumbTitle" style="color: var(--primary); font-weight: 700;">Detalhes do Imóvel</span>
+    </div>
+
+    <div id="propertyDetailContainer">
+      <!-- Loading Skeleton -->
+      <div class="skeleton-card" style="width: 100%; height: 500px;">
+        <div class="skeleton-shimmer"></div>
+      </div>
+    </div>
+
+    <!-- Related Properties in same neighborhood -->
+    <section class="related-properties-wrap" id="relatedPropertiesSection" style="margin-top: 3.5rem; display: none;">
+      <div class="section-header-wrap">
+        <div>
+          <span class="section-tag">Sugestões Selecionadas</span>
+          <h2 class="section-title">Outros Imóveis no Mesmo Bairro</h2>
+        </div>
+      </div>
+      <div id="relatedPropertiesGrid" class="horizontal-scroll-row"></div>
+    </section>
+  </main>
+
+  <!-- Sticky Mobile Bottom CTA Bar -->
+  <div class="property-sticky-mobile-cta" id="stickyMobileCta">
+    <div class="sticky-price-info">
+      <span class="sticky-price-label" id="stickyPriceLabel">Valor</span>
+      <span class="sticky-price-val" id="stickyPriceVal">R$ --</span>
+    </div>
+    <div class="sticky-action-buttons">
+      <a id="stickyCallBtn" href="tel:3433126702" class="btn-sticky-call">
+        <i class="fa-solid fa-phone"></i> Ligar
+      </a>
+      <a id="stickyWhatsappBtn" href="#" target="_blank" class="btn-sticky-whatsapp">
+        <i class="fa-brands fa-whatsapp"></i> Chamar no WhatsApp
+      </a>
+    </div>
+  </div>
+
+  <!-- Fullscreen Lightbox Modal for Photos -->
+  <div id="photoLightbox" class="lightbox-overlay" onclick="window.meridionalApp.closeLightbox()">
+    <button type="button" class="lightbox-close-btn" onclick="window.meridionalApp.closeLightbox()" aria-label="Fechar Galeria">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+    <div class="lightbox-content" onclick="event.stopPropagation()">
+      <img id="lightboxImage" src="" alt="Foto Expandida do Imóvel" />
+      <div class="lightbox-counter" id="lightboxCounter">1 / 1</div>
+      <button type="button" class="lightbox-nav-btn prev" onclick="window.meridionalApp.prevLightboxImage()"><i class="fa-solid fa-chevron-left"></i></button>
+      <button type="button" class="lightbox-nav-btn next" onclick="window.meridionalApp.nextLightboxImage()"><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+  </div>
+
+  <!-- Mobile Bottom Navigation Bar -->
+  <nav class="mobile-bottom-nav">
+    <a href="index.html" class="bottom-nav-item">
+      <i class="fa-solid fa-house"></i>
+      <span>Início</span>
+    </a>
+    <a href="imoveis.html" class="bottom-nav-item active">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <span>Buscar</span>
+    </a>
+    <a href="favoritos.html" class="bottom-nav-item">
+      <i class="fa-solid fa-heart"></i>
+      <span>Favoritos</span>
+      <span class="badge-count favorites-badge-count" style="display: none;">0</span>
+    </a>
+    <a href="anunciar.html" class="bottom-nav-item">
+      <i class="fa-solid fa-circle-plus"></i>
+      <span>Anunciar</span>
+    </a>
+    <a href="https://api.whatsapp.com/send?phone=553499604600&text=Ol%C3%A1!%20Gostaria%20de%20atendimento%20imobili%C3%A1rio." target="_blank" class="bottom-nav-item">
+      <i class="fa-brands fa-whatsapp" style="color: #25D366;"></i>
+      <span>WhatsApp</span>
+    </a>
+  </nav>
+
+  <!-- Site Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="brand-logo-wrap" style="margin-bottom: 1rem;">
+            <img src="https://meridional.imb.br/meridional.png" alt="Meridional" class="brand-logo-img" />
+          </div>
+          <p style="font-size: 0.9rem; line-height: 1.6; margin-bottom: 1.25rem;">
+            A <strong>Meridional Corretores Associados</strong> atua desde 1990 com excelência, ética e tradição no mercado imobiliário de Uberaba - MG.
+          </p>
+          <div style="display: flex; gap: 0.75rem;">
+            <a href="https://api.whatsapp.com/send?phone=553499604600" target="_blank" class="btn-icon-circle"><i class="fa-brands fa-whatsapp" style="color: #25D366;"></i></a>
+            <a href="tel:3433126702" class="btn-icon-circle"><i class="fa-solid fa-phone"></i></a>
+            <a href="https://instagram.com" target="_blank" class="btn-icon-circle"><i class="fa-brands fa-instagram"></i></a>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="footer-title">Imóveis em Uberaba</h4>
+          <ul class="footer-links">
+            <li><a href="imoveis.html?finalidade=venda" class="footer-link">Imóveis à Venda</a></li>
+            <li><a href="imoveis.html?finalidade=aluguel" class="footer-link">Imóveis para Alugar</a></li>
+            <li><a href="imoveis.html?tipo=damha" class="footer-link">Condomínios Damha</a></li>
+            <li><a href="imoveis.html?bairro=Merces" class="footer-link">Bairro Mercês</a></li>
+            <li><a href="imoveis.html?bairro=Flamboyant" class="footer-link">Bairro Flamboyant</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-title">Institucional</h4>
+          <ul class="footer-links">
+            <li><a href="sobre.html" class="footer-link">Nossa História (35 Anos)</a></li>
+            <li><a href="sobre.html#perito" class="footer-link">Perícia & Avaliação Judicial (CNAI)</a></li>
+            <li><a href="anunciar.html" class="footer-link">Cadastre seu Imóvel</a></li>
+            <li><a href="contato.html" class="footer-link">Fale Conosco / Plantão</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-title">Atendimento & Sede</h4>
+          <p style="font-size: 0.88rem; line-height: 1.6; margin-bottom: 0.65rem;">
+            <i class="fa-solid fa-location-dot" style="color: var(--primary);"></i> Praça Dom Eduardo, 470 – Mercês<br />
+            CEP 38060-280 — Uberaba / MG
+          </p>
+          <p style="font-size: 0.88rem; line-height: 1.6; margin-bottom: 0.65rem;">
+            <i class="fa-solid fa-phone" style="color: var(--primary);"></i> (34) 3312-6702<br />
+            <i class="fa-brands fa-whatsapp" style="color: #25D366;"></i> Plantão: (34) 9960-4600
+          </p>
+          <p style="font-size: 0.88rem; line-height: 1.6;">
+            <i class="fa-solid fa-id-card" style="color: var(--primary);"></i> CRECI 12.632 / MG
+          </p>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>© 2026 Imobiliária Meridional — Todos os direitos reservados. CRECI 12.632/MG.</p>
+        <p>Praça Dom Eduardo, 470 – Mercês, Uberaba – MG</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
