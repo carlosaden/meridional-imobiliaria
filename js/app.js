@@ -424,8 +424,8 @@ class MeridionalApp {
 
   createPropertyCardHtml(p) {
     const isFav = this.favorites.includes(p.id);
-    const mainImg = p.images && p.images.length > 0 ? p.images[0] : 'https://meridional.imb.br/meridional.png';
-    const photosCount = p.images ? p.images.length : 1;
+    const images = p.images && p.images.length > 0 ? p.images : ['https://meridional.imb.br/meridional.png'];
+    const photosCount = images.length;
     const priceDisplay = p.purpose === 'aluguel' 
       ? `${this.formatCurrency(p.rentalPrice || p.price)}/mês` 
       : this.formatCurrency(p.price);
@@ -434,8 +434,24 @@ class MeridionalApp {
 
     return `
       <div class="property-card-horizontal" onclick="window.location.href='imovel.html?id=${p.code}'">
-        <div class="card-image-wrap">
-          <img src="${mainImg}" alt="${p.title}" class="card-image" loading="lazy" />
+        <div class="card-image-wrap" onclick="event.stopPropagation()">
+          ${photosCount > 1 ? `
+            <button type="button" class="card-slider-arrow prev" onclick="window.meridionalApp.slideCardPhoto('${p.id}', -1, event)" aria-label="Foto anterior" title="Foto anterior">
+              <i class="fa-solid fa-chevron-left"></i>
+            </button>
+            <button type="button" class="card-slider-arrow next" onclick="window.meridionalApp.slideCardPhoto('${p.id}', 1, event)" aria-label="Próxima foto" title="Próxima foto">
+              <i class="fa-solid fa-chevron-right"></i>
+            </button>
+          ` : ''}
+
+          <div class="card-slider-track" id="cardSlider_${p.id}" onscroll="window.meridionalApp.handleCardSliderScroll('${p.id}', this)" onclick="window.location.href='imovel.html?id=${p.code}'">
+            ${images.map((img, i) => `
+              <div class="card-slider-item">
+                <img src="${img}" alt="${p.title} - Foto ${i + 1}" loading="lazy" />
+              </div>
+            `).join('')}
+          </div>
+
           ${p.badge ? `<span class="card-badge">${p.badge}</span>` : ''}
           <span class="card-purpose-badge">${p.purpose === 'aluguel' ? 'Locação' : 'Venda'}</span>
           
@@ -443,8 +459,8 @@ class MeridionalApp {
             <i class="fa-solid fa-heart"></i>
           </button>
 
-          <span style="position: absolute; bottom: 0.75rem; left: 0.85rem; background: rgba(0,0,0,0.7); color: #fff; font-size: 0.72rem; font-weight: 700; padding: 0.2rem 0.5rem; border-radius: var(--radius-xs); z-index: 3;">
-            <i class="fa-solid fa-camera"></i> ${photosCount} fotos
+          <span class="card-photo-counter" id="cardCounter_${p.id}">
+            <i class="fa-solid fa-camera"></i> 1/${photosCount}
           </span>
         </div>
 
@@ -567,16 +583,31 @@ class MeridionalApp {
       photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=256&q=80"
     };
 
+    this.detailCurrentIndex = 0;
+
     container.innerHTML = `
       <div class="property-detail-layout">
         <!-- Coluna Esquerda: Fotos, Especificações e Descrição -->
         <div>
-          <!-- Galeria de Fotos -->
+          <!-- Galeria de Fotos com Navegação e Swipe -->
           <div class="property-gallery-box">
-            <div class="gallery-main-img-wrap" onclick="window.meridionalApp.openLightbox(0)">
-              <img id="detailMainImage" src="${mainImg}" alt="${prop.title}" class="gallery-main-img" />
-              <button type="button" class="gallery-btn-expand" onclick="event.stopPropagation(); window.meridionalApp.openLightbox(0)">
-                <i class="fa-solid fa-expand"></i> Ver ${this.lightboxImages.length} fotos em tela cheia
+            <div class="gallery-main-img-wrap" id="galleryMainWrap">
+              <button type="button" class="gallery-nav-arrow prev" onclick="window.meridionalApp.prevDetailPhoto(event)" aria-label="Foto anterior" title="Foto anterior">
+                <i class="fa-solid fa-chevron-left"></i>
+              </button>
+              
+              <img id="detailMainImage" src="${mainImg}" alt="${prop.title}" class="gallery-main-img" onclick="window.meridionalApp.openLightbox(window.meridionalApp.detailCurrentIndex || 0)" />
+              
+              <button type="button" class="gallery-nav-arrow next" onclick="window.meridionalApp.nextDetailPhoto(event)" aria-label="Próxima foto" title="Próxima foto">
+                <i class="fa-solid fa-chevron-right"></i>
+              </button>
+
+              <span class="gallery-current-badge" id="galleryCurrentBadge">
+                <i class="fa-solid fa-camera"></i> 1 / ${this.lightboxImages.length}
+              </span>
+
+              <button type="button" class="gallery-btn-expand" onclick="event.stopPropagation(); window.meridionalApp.openLightbox(window.meridionalApp.detailCurrentIndex || 0)">
+                <i class="fa-solid fa-expand"></i> Tela cheia
               </button>
             </div>
             <div class="gallery-thumbs-wrapper">
@@ -585,7 +616,7 @@ class MeridionalApp {
               </button>
               <div class="gallery-thumbs-row" id="galleryThumbsRow">
                 ${this.lightboxImages.map((img, idx) => `
-                  <div class="gallery-thumb-item ${idx === 0 ? 'active' : ''}" data-index="${idx}" onclick="window.meridionalApp.selectDetailThumb('${img}', this, ${idx})">
+                  <div class="gallery-thumb-item ${idx === 0 ? 'active' : ''}" data-index="${idx}" onclick="window.meridionalApp.setDetailPhotoIndex(${idx})">
                     <img src="${img}" alt="Foto ${idx + 1}" loading="lazy" />
                   </div>
                 `).join('')}
@@ -729,6 +760,110 @@ class MeridionalApp {
     // Renderiza Imóveis Relacionados
     this.renderRelatedProperties(prop);
     this.setupThumbsWheelScroll();
+    this.setupDetailSwipeGestures();
+  }
+
+  // --- Rolagem/Navegação de Fotos no Card de Listagem & Home ---
+  slideCardPhoto(propId, direction, e) {
+    if (e) {
+      e.stopPropagation();
+      e.preventDefault();
+    }
+    this.triggerHaptic();
+    const track = document.getElementById(`cardSlider_${propId}`);
+    if (track) {
+      const itemWidth = track.clientWidth;
+      track.scrollBy({ left: direction * itemWidth, behavior: 'smooth' });
+    }
+  }
+
+  handleCardSliderScroll(propId, trackEl) {
+    if (!trackEl) return;
+    const itemWidth = trackEl.clientWidth || 1;
+    const scrollLeft = trackEl.scrollLeft;
+    const currentIndex = Math.round(scrollLeft / itemWidth) + 1;
+    const totalItems = trackEl.children.length;
+    const counter = document.getElementById(`cardCounter_${propId}`);
+    if (counter && totalItems > 0) {
+      counter.innerHTML = `<i class="fa-solid fa-camera"></i> ${Math.min(currentIndex, totalItems)}/${totalItems}`;
+    }
+  }
+
+  // --- Galeria Principal no Detalhe do Imóvel com Troca/Swap de Fotos ---
+  setDetailPhotoIndex(newIndex) {
+    if (!this.lightboxImages || this.lightboxImages.length === 0) return;
+    this.triggerHaptic();
+    if (newIndex < 0) newIndex = this.lightboxImages.length - 1;
+    if (newIndex >= this.lightboxImages.length) newIndex = 0;
+    this.detailCurrentIndex = newIndex;
+
+    const mainImg = document.getElementById('detailMainImage');
+    const badge = document.getElementById('galleryCurrentBadge');
+    if (mainImg) {
+      mainImg.style.opacity = '0.35';
+      mainImg.src = this.lightboxImages[newIndex];
+      setTimeout(() => { mainImg.style.opacity = '1'; }, 80);
+    }
+    if (badge) {
+      badge.innerHTML = `<i class="fa-solid fa-camera"></i> ${newIndex + 1} / ${this.lightboxImages.length}`;
+    }
+
+    // Sincroniza miniaturas ativas e rola suavemente para o centro
+    document.querySelectorAll('.gallery-thumb-item').forEach((t, i) => {
+      const isActive = i === newIndex;
+      t.classList.toggle('active', isActive);
+      if (isActive) {
+        t.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      }
+    });
+  }
+
+  prevDetailPhoto(e) {
+    if (e) {
+      e.stopPropagation();
+      e.preventDefault();
+    }
+    this.setDetailPhotoIndex((this.detailCurrentIndex || 0) - 1);
+  }
+
+  nextDetailPhoto(e) {
+    if (e) {
+      e.stopPropagation();
+      e.preventDefault();
+    }
+    this.setDetailPhotoIndex((this.detailCurrentIndex || 0) + 1);
+  }
+
+  // --- Gestos de Deslizar (Swipe) nas fotos do Detalhe ---
+  setupDetailSwipeGestures() {
+    const wrap = document.getElementById('galleryMainWrap');
+    if (!wrap) return;
+
+    let touchStartX = 0;
+    let touchStartY = 0;
+
+    wrap.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+      touchStartY = e.changedTouches[0].screenY;
+    }, { passive: true });
+
+    wrap.addEventListener('touchend', (e) => {
+      const touchEndX = e.changedTouches[0].screenX;
+      const touchEndY = e.changedTouches[0].screenY;
+      const diffX = touchEndX - touchStartX;
+      const diffY = touchEndY - touchStartY;
+
+      // Garante que o gesto horizontal é dominante e com amplitude mínima de 35px
+      if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 35) {
+        if (diffX < 0) {
+          // Deslizou para esquerda -> Próxima foto
+          this.nextDetailPhoto();
+        } else {
+          // Deslizou para direita -> Foto anterior
+          this.prevDetailPhoto();
+        }
+      }
+    }, { passive: true });
   }
 
   setupThumbsWheelScroll() {
@@ -751,14 +886,7 @@ class MeridionalApp {
   }
 
   selectDetailThumb(imgSrc, thumbEl, idx) {
-    this.triggerHaptic();
-    const main = document.getElementById('detailMainImage');
-    if (main) main.src = imgSrc;
-    document.querySelectorAll('.gallery-thumb-item').forEach(t => t.classList.remove('active'));
-    if (thumbEl) {
-      thumbEl.classList.add('active');
-      thumbEl.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-    }
+    this.setDetailPhotoIndex(idx);
   }
 
   copyPropertyCode(code) {
