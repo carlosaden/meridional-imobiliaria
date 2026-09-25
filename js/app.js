@@ -35,6 +35,10 @@ class MeridionalApp {
     this.setupTheme();
     this.updateFavoritesCount();
     this.setupScrollToTop();
+    this.setupScrollProgressBar();
+    this.setupHeaderScrollShrink();
+    this.setupKeyboardShortcuts();
+    this.setupTypewriterEffect();
 
     // 1. Página de Detalhes do Imóvel (imovel.html)
     if (document.getElementById('propertyDetailContainer')) {
@@ -57,6 +61,106 @@ class MeridionalApp {
     if (document.getElementById('damhaRow')) {
       this.initHomePage();
     }
+  }
+
+  // --- Barra de Progresso de Leitura no Topo ---
+  setupScrollProgressBar() {
+    let bar = document.getElementById('scrollProgressBar');
+    if (!bar) {
+      bar = document.createElement('div');
+      bar.id = 'scrollProgressBar';
+      bar.className = 'scroll-progress-bar';
+      document.body.prepend(bar);
+    }
+    window.addEventListener('scroll', () => {
+      const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = height > 0 ? (winScroll / height) * 100 : 0;
+      bar.style.width = scrolled + '%';
+    }, { passive: true });
+  }
+
+  // --- Header Sticky Shrink ao Rolar ---
+  setupHeaderScrollShrink() {
+    const header = document.querySelector('.site-header');
+    if (!header) return;
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 40) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    }, { passive: true });
+  }
+
+  // --- Atalhos de Teclado (Esc para fechar galeria, setas para navegar) ---
+  setupKeyboardShortcuts() {
+    document.addEventListener('keydown', (e) => {
+      const lb = document.getElementById('photoLightbox');
+      if (lb && lb.classList.contains('active')) {
+        if (e.key === 'Escape') this.closeLightbox();
+        if (e.key === 'ArrowRight') this.nextLightboxImage();
+        if (e.key === 'ArrowLeft') this.prevLightboxImage();
+      }
+    });
+  }
+
+  // --- Efeito Máquina de Escrever no Placeholder de Busca ---
+  setupTypewriterEffect() {
+    const inputs = [
+      document.getElementById('searchKeywordInput'),
+      document.getElementById('catalogSearchInput')
+    ].filter(Boolean);
+
+    if (inputs.length === 0) return;
+
+    const phrases = [
+      "Ex: Casa térrea no Condomínio Damha",
+      "Ex: Apartamento 3 quartos no Mercês",
+      "Ex: Casa com piscina no Flamboyant",
+      "Ex: Terreno à venda no Damha II",
+      "Ex: Código do imóvel (ME-3277)"
+    ];
+
+    let phraseIndex = 0;
+    let charIndex = 0;
+    let isDeleting = false;
+    let currentInput = inputs[0];
+
+    const typeLoop = () => {
+      // Apenas anima se o input não estiver focado e não tiver valor digitado
+      const activeElement = document.activeElement;
+      const hasValue = inputs.some(inp => inp.value.length > 0);
+      const isFocused = inputs.some(inp => inp === activeElement);
+
+      if (!hasValue && !isFocused) {
+        const currentPhrase = phrases[phraseIndex];
+        if (isDeleting) {
+          charIndex--;
+        } else {
+          charIndex++;
+        }
+
+        const textToShow = currentPhrase.substring(0, charIndex);
+        inputs.forEach(inp => {
+          if (inp !== activeElement && inp.value === '') {
+            inp.setAttribute('placeholder', textToShow);
+          }
+        });
+
+        if (!isDeleting && charIndex === currentPhrase.length) {
+          setTimeout(() => { isDeleting = true; typeLoop(); }, 2000);
+          return;
+        } else if (isDeleting && charIndex === 0) {
+          isDeleting = false;
+          phraseIndex = (phraseIndex + 1) % phrases.length;
+        }
+      }
+
+      setTimeout(typeLoop, isDeleting ? 40 : 80);
+    };
+
+    setTimeout(typeLoop, 1000);
   }
 
   // --- PWA Service Worker ---
@@ -567,11 +671,11 @@ class MeridionalApp {
               </div>
             </div>
 
-            <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1.5rem;">
+            <p style="font-size: 0.9rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1.25rem;">
               Tire dúvidas agora, receba a localização exata ou agende uma visita presencial para este imóvel.
             </p>
 
-            <a href="${whatsappUrl}" target="_blank" class="btn-agent-whatsapp">
+            <a href="${whatsappUrl}" target="_blank" class="btn-agent-whatsapp btn-shine">
               <i class="fa-brands fa-whatsapp"></i> Chamar Corretor no WhatsApp
             </a>
 
@@ -579,9 +683,35 @@ class MeridionalApp {
               <i class="fa-solid fa-phone"></i> Ligar para (34) 3312-6702
             </a>
 
-            <div style="margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--border-light); font-size: 0.82rem; color: var(--text-muted); display: flex; align-items: center; gap: 0.5rem;">
-              <i class="fa-solid fa-clock" style="color: var(--primary);"></i>
-              <span>Plantão disponível para atendimento hoje.</span>
+            <!-- Agendamento Rápido de Visita -->
+            <div class="visit-schedule-box">
+              <div class="visit-schedule-title">
+                <i class="fa-solid fa-calendar-check" style="color: var(--primary);"></i> Agendamento Rápido
+              </div>
+              <p style="font-size: 0.78rem; color: var(--text-muted);">Selecione o melhor período para visitar:</p>
+              <div class="visit-schedule-pills">
+                <button type="button" class="visit-period-btn" onclick="window.meridionalApp.quickVisitSchedule('Manhã (09h às 12h)', '${prop.code}', '${encodeURIComponent(prop.title)}')">
+                  <i class="fa-solid fa-sun"></i> Manhã
+                </button>
+                <button type="button" class="visit-period-btn" onclick="window.meridionalApp.quickVisitSchedule('Tarde (14h às 18h)', '${prop.code}', '${encodeURIComponent(prop.title)}')">
+                  <i class="fa-solid fa-cloud-sun"></i> Tarde
+                </button>
+                <button type="button" class="visit-period-btn" onclick="window.meridionalApp.quickVisitSchedule('Sábado (Plantão)', '${prop.code}', '${encodeURIComponent(prop.title)}')">
+                  <i class="fa-solid fa-calendar-day"></i> Sábado
+                </button>
+              </div>
+            </div>
+
+            <!-- Compartilhar Imóvel -->
+            <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
+              <button type="button" class="btn-agent-call" style="background: var(--bg-card-subtle); color: var(--text-main); margin-bottom: 0;" onclick="window.meridionalApp.shareProperty('${encodeURIComponent(prop.title)}', '${prop.code}')">
+                <i class="fa-solid fa-share-nodes"></i> Compartilhar Imóvel
+              </button>
+            </div>
+
+            <div style="margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid var(--border-light); font-size: 0.82rem; color: var(--text-muted); display: flex; align-items: center; gap: 0.5rem;">
+              <span class="pulse-dot"></span>
+              <span>Corretor com atendimento online hoje.</span>
             </div>
           </div>
         </div>
@@ -600,12 +730,52 @@ class MeridionalApp {
   }
 
   copyPropertyCode(code) {
+    this.triggerHaptic();
+    const badge = document.querySelector('.property-code-badge');
+    const fullText = `https://meridional.imb.br/imovel.html?id=${code}`;
+    
     if (navigator.clipboard) {
       navigator.clipboard.writeText(code).then(() => {
-        this.showToast(`Código ${code} copiado com sucesso!`);
+        if (badge) {
+          badge.classList.add('copied');
+          badge.innerHTML = `<i class="fa-solid fa-check"></i> Código <strong>${code}</strong> Copiado! ✓`;
+          setTimeout(() => {
+            badge.classList.remove('copied');
+            badge.innerHTML = `<i class="fa-solid fa-copy"></i> Código: <strong>${code}</strong> (Copiar)`;
+          }, 2500);
+        }
+        this.showToast(`Código ${code} copiado para a área de transferência!`);
       });
     } else {
       this.showToast(`Código do imóvel: ${code}`);
+    }
+  }
+
+  quickVisitSchedule(period, code, rawTitle) {
+    this.triggerHaptic();
+    const title = decodeURIComponent(rawTitle || '');
+    const msg = `Ol%C3%A1!%20Gostaria%20de%20agendar%20uma%20visita%20para%20o%20per%C3%ADodo%20da%20*${encodeURIComponent(period)}*%20no%20im%C3%B3vel%20*${encodeURIComponent(title)}*%20(C%C3%B3digo:%20*${code}*).%20Quais%20hor%C3%A1rios%20est%C3%A3o%20dispon%C3%ADveis?`;
+    window.open(`https://api.whatsapp.com/send?phone=${this.data.company.whatsappClean}&text=${msg}`, '_blank');
+  }
+
+  shareProperty(rawTitle, code) {
+    this.triggerHaptic();
+    const title = decodeURIComponent(rawTitle || 'Imóvel em Uberaba');
+    const url = window.location.href;
+    if (navigator.share) {
+      navigator.share({
+        title: `${code} - ${title} | Imobiliária Meridional`,
+        text: `Confira este imóvel em Uberaba: ${title} (${code})`,
+        url: url
+      }).catch(() => {});
+    } else {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(url).then(() => {
+          this.showToast('Link do imóvel copiado com sucesso! 🔗');
+        });
+      } else {
+        this.showToast('Compartilhe o link deste imóvel com seus contatos.');
+      }
     }
   }
 
@@ -681,10 +851,32 @@ class MeridionalApp {
 
     const input = document.getElementById('catalogSearchInput');
     const neighSelect = document.getElementById('catalogNeighborhoodFilter');
-    if (input && q) input.value = q;
+    if (input) {
+      if (q) input.value = q;
+      input.addEventListener('input', (e) => {
+        this.catalogFilter.keyword = e.target.value;
+        clearTimeout(this._catalogDebounce);
+        this._catalogDebounce = setTimeout(() => {
+          this.renderCatalogList();
+        }, 200);
+      });
+    }
     if (neighSelect && bairro !== 'todos') neighSelect.value = bairro;
 
     this.renderCatalogList();
+  }
+
+  setCatalogViewMode(mode) {
+    this.triggerHaptic();
+    this.catalogViewMode = mode;
+    const grid = document.getElementById('catalogPropertiesGrid');
+    const btnGrid = document.getElementById('btnViewGrid');
+    const btnList = document.getElementById('btnViewList');
+    if (grid) {
+      grid.classList.toggle('list-view', mode === 'list');
+    }
+    if (btnGrid) btnGrid.classList.toggle('active', mode === 'grid');
+    if (btnList) btnList.classList.toggle('active', mode === 'list');
   }
 
   setCatalogFilter(field, value) {

@@ -95,6 +95,48 @@
   -webkit-text-size-adjust: 100%;
 }
 
+::selection {
+  background: var(--primary);
+  color: #ffffff;
+}
+
+/* Custom Sleek Scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-main);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 9999px;
+  border: 2px solid var(--bg-main);
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+  background: #334155;
+  border: 2px solid var(--bg-main);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary);
+}
+
+/* Reading & Scroll Progress Bar at the top of viewport */
+.scroll-progress-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 3px;
+  width: 0%;
+  background: linear-gradient(90deg, #FF7A00 0%, #FF9500 50%, #25D366 100%);
+  z-index: 9999;
+  transition: width 0.1s ease-out;
+}
+
 html {
   font-size: 16px;
   scroll-behavior: smooth;
@@ -2416,4 +2458,268 @@ h1, h2, h3, h4, h5, h6 {
   .lightbox-nav-btn.prev { left: 0.5rem; }
   .lightbox-nav-btn.next { right: 0.5rem; }
 }
+
+/* ==========================================================================
+   100 UI IMPROVEMENTS - ADVANCED REFINEMENTS
+   ========================================================================== */
+
+/* 1. Header Scrolled State */
+.site-header {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.site-header.scrolled {
+  height: 62px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border-bottom: 1px solid var(--border-light);
+}
+
+[data-theme="dark"] .site-header.scrolled {
+  background: rgba(20, 20, 24, 0.95);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.site-header.scrolled .brand-logo-img {
+  height: 38px;
+}
+
+/* 2. Button Shine Effect */
+.btn-shine {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-shine::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    60deg,
+    rgba(255, 255, 255, 0) 20%,
+    rgba(255, 255, 255, 0.25) 50%,
+    rgba(255, 255, 255, 0) 80%
+  );
+  transform: rotate(25deg) translateY(-100%);
+  transition: transform 0.75s ease-in-out;
+  pointer-events: none;
+}
+
+.btn-shine:hover::after {
+  transform: rotate(25deg) translateY(100%);
+}
+
+/* 3. Pulsing Dot Badge */
+.pulse-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #25D366;
+  margin-right: 6px;
+  box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7);
+  animation: pulseGreen 2s infinite;
+}
+
+@keyframes pulseGreen {
+  0% {
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(37, 211, 102, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
+  }
+}
+
+/* 4. Copy Code Success Animation */
+.property-code-badge {
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.property-code-badge:active {
+  transform: scale(0.96);
+}
+
+.property-code-badge.copied {
+  background: #25D366 !important;
+  color: #ffffff !important;
+  border-color: #25D366 !important;
+}
+
+/* 5. View Mode Switcher (Grid vs List) */
+.view-mode-toggle {
+  display: flex;
+  background: var(--bg-card-subtle);
+  padding: 3px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-light);
+  gap: 2px;
+}
+
+.view-mode-btn {
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-xs);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.view-mode-btn.active {
+  background: var(--bg-card);
+  color: var(--primary);
+  box-shadow: var(--shadow-xs);
+}
+
+/* List View Modifier for Catalog */
+.catalog-properties-grid.list-view {
+  grid-template-columns: 1fr !important;
+}
+
+.catalog-properties-grid.list-view .property-card-horizontal {
+  display: flex;
+  flex-direction: row;
+  min-height: 200px;
+}
+
+@media (max-width: 640px) {
+  .catalog-properties-grid.list-view .property-card-horizontal {
+    flex-direction: column;
+  }
+}
+
+.catalog-properties-grid.list-view .property-card-horizontal .card-image-wrap {
+  width: 320px;
+  min-width: 320px;
+  height: auto;
+  border-radius: var(--radius-md) 0 0 var(--radius-md);
+}
+
+@media (max-width: 640px) {
+  .catalog-properties-grid.list-view .property-card-horizontal .card-image-wrap {
+    width: 100%;
+    min-width: 100%;
+    height: 200px;
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+  }
+}
+
+/* 6. Interactive Schedule Visit Widget */
+.visit-schedule-box {
+  margin-top: 1.5rem;
+  padding: 1.25rem;
+  background: var(--bg-card-subtle);
+  border: 1px dashed var(--border-light);
+  border-radius: var(--radius-md);
+}
+
+.visit-schedule-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.visit-schedule-pills {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.75rem;
+}
+
+.visit-period-btn {
+  flex: 1;
+  min-width: 80px;
+  padding: 0.5rem 0.75rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-main);
+  text-align: center;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.visit-period-btn:hover,
+.visit-period-btn.active {
+  background: var(--primary-light);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+[data-theme="dark"] .visit-period-btn:hover,
+[data-theme="dark"] .visit-period-btn.active {
+  background: rgba(255, 122, 0, 0.15);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+/* 7. Enhanced Card Hover Micro-Lift */
+.property-card-horizontal {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+.property-card-horizontal:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg), 0 0 0 1px rgba(255, 122, 0, 0.15);
+  border-color: rgba(255, 122, 0, 0.3);
+}
+
+.spec-item {
+  transition: background-color 0.2s ease;
+  border-radius: var(--radius-xs);
+}
+
+.spec-item:hover {
+  background-color: var(--bg-card-subtle);
+}
+
+/* 8. High Contrast Print Stylesheet */
+@media print {
+  .site-header,
+  .top-institutional-bar,
+  .mobile-bottom-nav,
+  .floating-whatsapp-btn,
+  .scroll-progress-bar,
+  .property-sticky-mobile-cta,
+  #scrollToTopBtn,
+  .site-footer,
+  .btn-header-cta,
+  .header-actions {
+    display: none !important;
+  }
+
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    padding: 0 !important;
+  }
+
+  .property-info-card,
+  .property-gallery-box,
+  .property-broker-card {
+    box-shadow: none !important;
+    border: 1px solid #ccc !important;
+    break-inside: avoid;
+  }
+}
+
 

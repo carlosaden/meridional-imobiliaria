@@ -22,6 +22,9 @@
 </head>
 <body>
 
+  <!-- Reading & Scroll Progress Bar -->
+  <div id="scrollProgressBar" class="scroll-progress-bar"></div>
+
   <!-- Top Institutional Bar -->
   <div class="top-institutional-bar">
     <div class="container top-bar-inner">
@@ -122,8 +125,8 @@
         <button type="button" class="chip-btn" data-filter="comercial" onclick="window.meridionalApp.setCatalogFilter('tipo', 'comercial')"><i class="fa-solid fa-briefcase"></i> Comerciais</button>
       </div>
 
-      <!-- Sorting & Counter -->
-      <div style="display: flex; align-items: center; gap: 1rem;">
+      <!-- Sorting, Counter & View Mode -->
+      <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
         <span id="catalogResultsCount" style="font-size: 0.88rem; font-weight: 700; color: var(--text-muted); white-space: nowrap;">Carregando imóveis...</span>
         <select id="catalogSortSelect" class="search-select" style="height: 40px; font-size: 0.85rem; padding: 0 0.75rem; width: auto;" onchange="window.meridionalApp.handleCatalogSortChange()">
           <option value="relevance">Mais Relevantes</option>
@@ -131,6 +134,14 @@
           <option value="price_desc">Maior Preço</option>
           <option value="area_desc">Maior Área (m²)</option>
         </select>
+        <div class="view-mode-toggle">
+          <button type="button" class="view-mode-btn active" id="btnViewGrid" onclick="window.meridionalApp.setCatalogViewMode('grid')" title="Visualização em Grade" aria-label="Grade">
+            <i class="fa-solid fa-table-cells-large"></i>
+          </button>
+          <button type="button" class="view-mode-btn" id="btnViewList" onclick="window.meridionalApp.setCatalogViewMode('list')" title="Visualização em Lista" aria-label="Lista">
+            <i class="fa-solid fa-list"></i>
+          </button>
+        </div>
       </div>
     </div>
 
