@@ -1,6 +1,5 @@
 /**
- * Imobiliária Meridional - Dataset Oficial de Imóveis e Lançamentos
- * Com imagens originais e acervo real de Uberaba/MG
+ * Imobiliária Meridional - Dataset Oficial Completo com Geo-coordenadas, Vídeos e Métricas
  */
 
 const PROPERTIES_DATA = [
@@ -19,6 +18,8 @@ const PROPERTIES_DATA = [
     neighborhood: "Damha II",
     city: "Uberaba",
     state: "MG",
+    lat: -19.7210,
+    lng: -47.9050,
     address: "Condomínio Residencial Damha II",
     area: 480,
     builtArea: 420,
@@ -30,12 +31,21 @@ const PROPERTIES_DATA = [
     isSale: true,
     isRent: false,
     badge: "Exclusividade Damha",
+    viewsCount: 18,
+    capRate: "9.2% a.a.",
+    videoUrl: "https://www.youtube-nocookie.com/embed/H3bkABYG8t4",
+    walkScore: [
+      { name: "Portaria Damha", dist: "2 min a pé" },
+      { name: "Clube Social & Lagos", dist: "3 min a pé" },
+      { name: "Shopping Uberaba", dist: "8 min de carro" },
+      { name: "Colégio Marista", dist: "10 min de carro" }
+    ],
     description: "Espetacular residência no Damha II. Acabamento primoroso, 4 suítes completas com armários, sala ampla para 3 ambientes, lavabo, varanda gourmet integrada à piscina aquecida com hidromassagem e cascata, energia solar e 4 vagas de garagem.",
-    features: ["Piscina Aquecida", "Espaço Gourmet", "Energia Solar", "4 Suítes com Closet", "Segurança 24h Damha", "Quadra de Tênis"],
+    features: ["Piscina Aquecida", "Espaço Gourmet", "Energia Solar", "4 Suítes com Closet", "Segurança 24h Damha", "Quadra de Tênis", "Pet Friendly", "Ar Condicionado"],
     images: [
       "https://meridional.imb.br/resize.php?img=3277/001.jpeg&width=600&height=400",
-      "https://meridional.imb.br/resize.php?img=3277/001.jpeg&width=800&height=600",
-      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80"
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80",
+      "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?auto=format&fit=crop&w=800&q=80"
     ]
   },
   {
@@ -52,6 +62,8 @@ const PROPERTIES_DATA = [
     neighborhood: "Flamboyant",
     city: "Uberaba",
     state: "MG",
+    lat: -19.7350,
+    lng: -47.9210,
     address: "Residencial Flamboyant II",
     area: 390,
     builtArea: 310,
@@ -63,8 +75,15 @@ const PROPERTIES_DATA = [
     isSale: true,
     isRent: false,
     badge: "Destaque Flamboyant",
+    viewsCount: 14,
+    capRate: "6.8% a.a.",
+    walkScore: [
+      { name: "Praça Central do Condomínio", dist: "1 min a pé" },
+      { name: "Supermercado Bretas", dist: "5 min de carro" },
+      { name: "Uniube Aeroporto", dist: "7 min de carro" }
+    ],
     description: "Casa contemporânea em condomínio fechado. 3 suítes amplas com ar condicionado, sala com pé-direito duplo, cozinha gourmet planejada, área de lazer com piscina e churrasqueira, acabamentos nobres.",
-    features: ["Piscina com Cascata", "Área Gourmet", "Móveis Planejados", "Segurança 24h", "Garagem para 4 Carros"],
+    features: ["Piscina com Cascata", "Área Gourmet", "Móveis Planejados", "Segurança 24h", "Garagem para 4 Carros", "Energia Solar"],
     images: [
       "https://meridional.imb.br/resize.php?img=3234/1(3).jpeg&width=600&height=400",
       "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=800&q=80"
@@ -84,6 +103,8 @@ const PROPERTIES_DATA = [
     neighborhood: "Jardim Nenê Gomes",
     city: "Uberaba",
     state: "MG",
+    lat: -19.7420,
+    lng: -47.9400,
     address: "Jardim Nenê Gomes",
     area: 280,
     builtArea: 215,
@@ -95,8 +116,14 @@ const PROPERTIES_DATA = [
     isSale: true,
     isRent: false,
     badge: "Venda Destaque",
+    viewsCount: 22,
+    capRate: "5.7% a.a.",
+    walkScore: [
+      { name: "Avenida Leopoldino de Oliveira", dist: "4 min de carro" },
+      { name: "Praça Dom Eduardo", dist: "6 min de carro" }
+    ],
     description: "Casa nova com acabamento diferenciado. 3 dormitórios sendo 2 suítes, sala em 2 ambientes, cozinha gourmet integrada com churrasqueira, quintal espaçoso e garagem coberta.",
-    features: ["Porcelanato Polido", "Espaço Gourmet", "Iluminação LED", "Portão Eletrônico"],
+    features: ["Porcelanato Polido", "Espaço Gourmet", "Iluminação LED", "Portão Eletrônico", "Quintal Amplo"],
     images: [
       "https://meridional.imb.br/resize.php?img=3273/1(1).jpeg&width=600&height=400",
       "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=800&q=80"
@@ -116,7 +143,9 @@ const PROPERTIES_DATA = [
     neighborhood: "Centro",
     city: "Uberaba",
     state: "MG",
-    address: "Região Central de Uberaba",
+    lat: -19.7485,
+    lng: -47.9320,
+    address: "Rua Vigário Silva, Centro",
     area: 94,
     builtArea: 94,
     bedrooms: 2,
@@ -127,6 +156,13 @@ const PROPERTIES_DATA = [
     isSale: true,
     isRent: false,
     badge: "Oportunidade Centro",
+    viewsCount: 31,
+    capRate: "7.3% a.a.",
+    walkScore: [
+      { name: "Calçadão Artur Machado", dist: "2 min a pé" },
+      { name: "Hospital São Domingos", dist: "5 min a pé" },
+      { name: "Bancos e Cartórios", dist: "3 min a pé" }
+    ],
     description: "Apartamento reformado no Centro de Uberaba. 2 dormitórios (1 suíte) com armários, sala em L com sacada e vista panorâmica, cozinha com armários e bancada em granito.",
     features: ["Centro da Cidade", "Sacada Panorâmica", "Armários Embutidos", "Elevador", "Portaria"],
     images: [
@@ -148,6 +184,8 @@ const PROPERTIES_DATA = [
     neighborhood: "Parque das Américas",
     city: "Uberaba",
     state: "MG",
+    lat: -19.7600,
+    lng: -47.9550,
     address: "Residencial Turim",
     area: 52,
     builtArea: 52,
@@ -159,8 +197,14 @@ const PROPERTIES_DATA = [
     isSale: true,
     isRent: false,
     badge: "Minha Casa Minha Vida",
-    description: "Apartamento ideal para investimento ou moradia. 2 quartos, sala, cozinha americana, banheiro social, garagem e condomínio com área de lazer.",
-    features: ["Financiamento Caixa", "Condomínio Fechado", "Área de Lazer", "Portaria 24h"],
+    viewsCount: 45,
+    capRate: "8.5% a.a.",
+    walkScore: [
+      { name: "Ponto de Ônibus / BRT", dist: "1 min a pé" },
+      { name: "Supermercado ABC", dist: "3 min de carro" }
+    ],
+    description: "Apartamento ideal para investimento ou moradia. 2 quartos, sala, cozinha americana, banheiro social, garagem e condomínio com área de lazer. Aceita subsídio Caixa!",
+    features: ["Financiamento Caixa", "Condomínio Fechado", "Área de Lazer", "Portaria 24h", "MCMV"],
     images: [
       "https://meridional.imb.br/resize.php?img=3226/1(7).jpeg&width=600&height=400",
       "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=800&q=80"
@@ -180,6 +224,8 @@ const PROPERTIES_DATA = [
     neighborhood: "Damha III",
     city: "Uberaba",
     state: "MG",
+    lat: -19.7180,
+    lng: -47.9020,
     address: "Condomínio Damha III",
     area: 450,
     builtArea: 0,
@@ -191,6 +237,12 @@ const PROPERTIES_DATA = [
     isSale: true,
     isRent: false,
     badge: "Lote Nobre Damha",
+    viewsCount: 12,
+    capRate: "Valorização 15% a.a.",
+    walkScore: [
+      { name: "Complexo Esportivo Damha", dist: "2 min a pé" },
+      { name: "Lago e Pista de Caminhada", dist: "4 min a pé" }
+    ],
     description: "Excelente terreno plano no Damha III, próximo à portaria e complexo esportivo. Pronto para construir a residência dos seus sonhos.",
     features: ["Topografia Plana", "Segurança Máxima", "Clube com Lago", "Pronto para Construir"],
     images: [
@@ -214,6 +266,8 @@ const PROPERTIES_DATA = [
     neighborhood: "Mercês",
     city: "Uberaba",
     state: "MG",
+    lat: -19.7430,
+    lng: -47.9380,
     address: "Bairro Mercês, Próximo Praça Dom Eduardo",
     area: 168,
     builtArea: 168,
@@ -225,8 +279,15 @@ const PROPERTIES_DATA = [
     isSale: false,
     isRent: true,
     badge: "Locação Mercês",
+    viewsCount: 26,
+    capRate: "5.5% a.a.",
+    walkScore: [
+      { name: "Praça Dom Eduardo", dist: "3 min a pé" },
+      { name: "Hospital Mário Palmério", dist: "5 min de carro" },
+      { name: "Colégio Nossa Senhora das Dores", dist: "4 min a pé" }
+    ],
     description: "Apartamento nobre no Edifício Évros. 3 suítes climatizadas, varanda gourmet com churrasqueira, sala para 3 ambientes, lavabo, lazer completo no prédio e 2 vagas paralelas.",
-    features: ["3 Suítes", "Varanda Gourmet", "Piscina e Academia", "Portaria 24h", "Bairro Nobre Mercês"],
+    features: ["3 Suítes", "Varanda Gourmet", "Piscina e Academia", "Portaria 24h", "Bairro Nobre Mercês", "Sem Fiador"],
     images: [
       "https://meridional.imb.br/resize.php?img=3318/1(32).jpeg&width=600&height=400",
       "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80"
@@ -246,6 +307,8 @@ const PROPERTIES_DATA = [
     neighborhood: "Damha I",
     city: "Uberaba",
     state: "MG",
+    lat: -19.7230,
+    lng: -47.9070,
     address: "Condomínio Residencial Damha I",
     area: 420,
     builtArea: 350,
@@ -257,8 +320,14 @@ const PROPERTIES_DATA = [
     isSale: false,
     isRent: true,
     badge: "Locação Damha",
+    viewsCount: 19,
+    capRate: "4.3% a.a.",
+    walkScore: [
+      { name: "Portaria Damha I", dist: "2 min a pé" },
+      { name: "Lago de Pesca Esportiva", dist: "5 min a pé" }
+    ],
     description: "Excelente residência disponível para locação no Damha I. 4 suítes, sala com pé-direito alto, completa em armários, lazer com piscina e churrasqueira.",
-    features: ["4 Suítes", "Piscina", "Armários Planejados", "Segurança 24h", "Garagem Ampla"],
+    features: ["4 Suítes", "Piscina", "Armários Planejados", "Segurança 24h", "Garagem Ampla", "Sem Fiador"],
     images: [
       "https://meridional.imb.br/resize.php?img=3317/2.jpeg&width=600&height=400",
       "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80"
@@ -278,6 +347,8 @@ const PROPERTIES_DATA = [
     neighborhood: "São Benedito",
     city: "Uberaba",
     state: "MG",
+    lat: -19.7460,
+    lng: -47.9280,
     address: "São Benedito",
     area: 140,
     builtArea: 140,
@@ -289,8 +360,14 @@ const PROPERTIES_DATA = [
     isSale: false,
     isRent: true,
     badge: "Locação Destaque",
+    viewsCount: 29,
+    capRate: "8.0% a.a.",
+    walkScore: [
+      { name: "Restaurantes São Benedito", dist: "2 min a pé" },
+      { name: "Avenida Santos Dumont", dist: "3 min de carro" }
+    ],
     description: "Apartamento amplo no Residencial Torre Sul. 3 dormitórios (2 suítes), sala 2 ambientes com sacada gourmet, cozinha com armários e 2 vagas de garagem.",
-    features: ["Sacada Gourmet", "2 Suítes", "Armários", "2 Vagas", "Prédio com Lazer"],
+    features: ["Sacada Gourmet", "2 Suítes", "Armários", "2 Vagas", "Prédio com Lazer", "Sem Fiador"],
     images: [
       "https://meridional.imb.br/resize.php?img=3298/1(22).jpeg&width=600&height=400",
       "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=80"
@@ -310,6 +387,8 @@ const PROPERTIES_DATA = [
     neighborhood: "São Benedito",
     city: "Uberaba",
     state: "MG",
+    lat: -19.7440,
+    lng: -47.9260,
     address: "Bairro São Benedito",
     area: 260,
     builtArea: 200,
@@ -321,6 +400,11 @@ const PROPERTIES_DATA = [
     isSale: false,
     isRent: true,
     badge: "Locação Residencial",
+    viewsCount: 16,
+    capRate: "6.2% a.a.",
+    walkScore: [
+      { name: "Praça Santa Terezinha", dist: "4 min a pé" }
+    ],
     description: "Casa tradicional e espaçosa em localização privilegiada no São Benedito. 4 quartos (2 suítes), salas de estar e jantar, quintal e garagem para 2 carros.",
     features: ["4 Dormitórios", "Bairro Tradicional", "Quintal Espaçoso", "Garagem Coberta"],
     images: [
@@ -342,6 +426,8 @@ const PROPERTIES_DATA = [
     neighborhood: "Mercês",
     city: "Uberaba",
     state: "MG",
+    lat: -19.7410,
+    lng: -47.9350,
     address: "Bairro Mercês",
     area: 75,
     builtArea: 75,
@@ -353,6 +439,11 @@ const PROPERTIES_DATA = [
     isSale: false,
     isRent: true,
     badge: "Excelente Custo",
+    viewsCount: 38,
+    capRate: "6.9% a.a.",
+    walkScore: [
+      { name: "Praça Dom Eduardo", dist: "5 min a pé" }
+    ],
     description: "Apartamento muito bem localizado no Mercês. 2 quartos sendo 1 suíte, sala, cozinha com armários e 1 vaga.",
     features: ["Mercês", "1 Suíte", "Cozinha com Armários", "Garagem"],
     images: [
@@ -374,6 +465,8 @@ const PROPERTIES_DATA = [
     neighborhood: "Centro",
     city: "Uberaba",
     state: "MG",
+    lat: -19.7490,
+    lng: -47.9300,
     address: "Região Central",
     area: 82,
     builtArea: 82,
@@ -385,6 +478,11 @@ const PROPERTIES_DATA = [
     isSale: false,
     isRent: true,
     badge: "Locação Centro",
+    viewsCount: 21,
+    capRate: "7.0% a.a.",
+    walkScore: [
+      { name: "Supermercado Bahamas", dist: "3 min a pé" }
+    ],
     description: "Apartamento prático e bem localizado. 2 dormitórios sendo 1 suíte, sala com sacada, armários e elevador.",
     features: ["Centro", "Elevador", "Sacada", "Armários"],
     images: [
@@ -408,6 +506,8 @@ const PROPERTIES_DATA = [
     neighborhood: "Univerdecidade",
     city: "Uberaba",
     state: "MG",
+    lat: -19.7120,
+    lng: -47.9620,
     address: "Polo Logístico Univerdecidade",
     area: 2800,
     builtArea: 2200,
@@ -419,6 +519,12 @@ const PROPERTIES_DATA = [
     isSale: false,
     isRent: true,
     badge: "Polo Logístico",
+    viewsCount: 15,
+    capRate: "7.4% a.a.",
+    walkScore: [
+      { name: "Acesso direto BR-050", dist: "1 min de carro" },
+      { name: "Parque Tecnológico", dist: "3 min de carro" }
+    ],
     description: "Galpão industrial com pé direito de 10 metros, piso de alta resistência, 4 docas com nivelador e amplo pátio para manobra de carretas.",
     features: ["Pé-direito 10m", "4 Docas Niveladas", "Pátio de Manobras", "Fácil Acesso BR-050"],
     images: [
@@ -440,6 +546,8 @@ const PROPERTIES_DATA = [
     neighborhood: "Centro",
     city: "Uberaba",
     state: "MG",
+    lat: -19.7470,
+    lng: -47.9330,
     address: "Centro de Uberaba",
     area: 950,
     builtArea: 850,
@@ -451,6 +559,11 @@ const PROPERTIES_DATA = [
     isSale: false,
     isRent: true,
     badge: "Prédio Corporativo",
+    viewsCount: 11,
+    capRate: "7.1% a.a.",
+    walkScore: [
+      { name: "Av. Leopoldino de Oliveira", dist: "1 min a pé" }
+    ],
     description: "Prédio comercial com 3 pavimentos livres, elevador, piso elevado, recepção climatizada e estacionamento frontal para clientes.",
     features: ["3 Pavimentos", "Elevador", "Estacionamento Privativo", "Piso Elevado"],
     images: [
@@ -472,6 +585,8 @@ const PROPERTIES_DATA = [
     neighborhood: "Centro",
     city: "Uberaba",
     state: "MG",
+    lat: -19.7480,
+    lng: -47.9310,
     address: "Rua Vigário Silva, Centro",
     area: 480,
     builtArea: 400,
@@ -483,6 +598,11 @@ const PROPERTIES_DATA = [
     isSale: false,
     isRent: true,
     badge: "Clínicas & Escritórios",
+    viewsCount: 17,
+    capRate: "6.3% a.a.",
+    walkScore: [
+      { name: "Praça Rui Barbosa", dist: "3 min a pé" }
+    ],
     description: "Imóvel perfeito para clínicas médicas, escritórios ou sedes de empresas com excelente visibilidade no Centro de Uberaba.",
     features: ["Recepção Ampla", "Salas Climatizadas", "Estacionamento", "Centro Comercial"],
     images: [
@@ -504,6 +624,8 @@ const PROPERTIES_DATA = [
     neighborhood: "Morumbi",
     city: "Uberaba",
     state: "MG",
+    lat: -19.7650,
+    lng: -47.9150,
     address: "Bairro Morumbi",
     area: 450,
     builtArea: 380,
@@ -515,6 +637,11 @@ const PROPERTIES_DATA = [
     isSale: false,
     isRent: true,
     badge: "Galpão Morumbi",
+    viewsCount: 13,
+    capRate: "6.4% a.a.",
+    walkScore: [
+      { name: "Av. Marcus Cherem", dist: "3 min de carro" }
+    ],
     description: "Galpão comercial e de armazenagem com escritório, portão alto para caminhões e piso reforçado.",
     features: ["Piso Reforçado", "Portão Alto", "Escritório", "Fácil Acesso"],
     images: [
@@ -620,12 +747,12 @@ const DEVELOPMENTS_DATA = [
 ];
 
 const NEIGHBORHOODS_DATA = [
-  { name: "Damha I, II e III", type: "Condomínios Fechados", listings: 48, tag: "Alto Padrão", desc: "Segurança armada 24h, lazer completo com lagos e máxima valorização." },
-  { name: "Mercês", type: "Bairro Nobre & Tradicional", listings: 62, tag: "Mais Procurado", desc: "Sede da Meridional na Praça Dom Eduardo, próximo a clínicas e hospitais." },
-  { name: "Flamboyant", type: "Condomínios & Residências", listings: 35, tag: "Familiar", desc: "Região residencial tranquila com condomínios fechados modernos." },
-  { name: "Centro", type: "Comercial & Residencial", listings: 85, tag: "Conveniência", desc: "Acesso rápido a bancos, cartórios, colégios e comércio geral." },
-  { name: "São Benedito", type: "Residencial & Gastronômico", listings: 41, tag: "Charme", desc: "Bairro tradicional arborizado com excelentes restaurantes e praças." },
-  { name: "Univerdecidade", type: "Polo Logístico & Industrial", listings: 24, tag: "Empresarial", desc: "Grandes galpões e áreas logísticas com fácil acesso à BR-050." }
+  { name: "Damha I, II e III", type: "Condomínios Fechados", listings: 48, tag: "Alto Padrão", desc: "Segurança armada 24h, lazer completo com lagos e máxima valorização.", lat: -19.7210, lng: -47.9050 },
+  { name: "Mercês", type: "Bairro Nobre & Tradicional", listings: 62, tag: "Mais Procurado", desc: "Sede da Meridional na Praça Dom Eduardo, próximo a clínicas e hospitais.", lat: -19.7430, lng: -47.9380 },
+  { name: "Flamboyant", type: "Condomínios & Residências", listings: 35, tag: "Familiar", desc: "Região residencial tranquila com condomínios fechados modernos.", lat: -19.7350, lng: -47.9210 },
+  { name: "Centro", type: "Comercial & Residencial", listings: 85, tag: "Conveniência", desc: "Acesso rápido a bancos, cartórios, colégios e comércio geral.", lat: -19.7485, lng: -47.9320 },
+  { name: "São Benedito", type: "Residencial & Gastronômico", listings: 41, tag: "Charme", desc: "Bairro tradicional arborizado com excelentes restaurantes e praças.", lat: -19.7460, lng: -47.9280 },
+  { name: "Univerdecidade", type: "Polo Logístico & Industrial", listings: 24, tag: "Empresarial", desc: "Grandes galpões e áreas logísticas com fácil acesso à BR-050.", lat: -19.7120, lng: -47.9620 }
 ];
 
 const BLOG_POSTS_DATA = [
@@ -658,12 +785,36 @@ const BLOG_POSTS_DATA = [
   }
 ];
 
+const FAQ_DATA = [
+  {
+    question: "Quais são os documentos necessários para financiar um imóvel pela Caixa?",
+    answer: "Para pessoas físicas, são necessários: RG, CPF, Comprovante de Estado Civil, Comprovante de Residência atualizado, Comprovante de Renda (3 últimos holerites ou Declaração de Imposto de Renda com recibo) e Extrato da conta vinculada do FGTS (caso deseje utilizar o saldo). A Meridional faz todo o processo de aprovação de crédito para você."
+  },
+  {
+    question: "Como funciona a locação de imóveis sem fiador na Meridional?",
+    answer: "Oferecemos modalidades modernas como CredPago e Seguro Fiança, onde você pode alugar seu imóvel em até 24 horas usando seu cartão de crédito ou análise digital de CPF, sem burocracia e sem precisar de fiador ou caução."
+  },
+  {
+    question: "O que é o laudo de avaliação mercadológica (PTAM) emitido pelo Perito CNAI?",
+    answer: "O Parecer Técnico de Avaliação Mercadológica (PTAM) é um documento oficial emitido por Perito Credenciado (CNAI) que determina o valor real de mercado de um imóvel conforme as normas ABNT NBR 14.653, tendo plena validade judicial em partilhas de herança, inventários, divórcios, garantias bancárias e ações renovatórias."
+  },
+  {
+    question: "Quais taxas e impostos preciso pagar na compra de um imóvel em Uberaba?",
+    answer: "Os principais custos adicionais são o ITBI (Imposto de Transmissão de Bens Imóveis, que em Uberaba é de aproximadamente 2% a 3% sobre o valor venal/transação), a Escritura Pública em Cartório de Notas e o Registro do Imóvel no Cartório de Registro de Imóveis (1º ou 2º Ofício de Uberaba)."
+  },
+  {
+    question: "Como posso cadastrar meu imóvel para venda ou locação?",
+    answer: "Basta acessar a seção 'Cadastre seu Imóvel' em nosso site ou enviar uma mensagem pelo WhatsApp (34 9960-4600). Nossa equipe agenda uma visita técnica, realiza a sessão de fotos e faz a divulgação nos maiores portais imobiliários do Brasil."
+  }
+];
+
 // Export to global scope
 window.MERIDIONAL_DATA = {
   properties: PROPERTIES_DATA,
   developments: DEVELOPMENTS_DATA,
   neighborhoods: NEIGHBORHOODS_DATA,
   blogPosts: BLOG_POSTS_DATA,
+  faq: FAQ_DATA,
   company: {
     name: "Imobiliária Meridional",
     legalName: "Meridional Corretores Associados",

@@ -6,8 +6,13 @@
   <meta name="theme-color" content="#FF7A00" />
   <title>Imobiliária Meridional | A sua imobiliária em Uberaba MG</title>
 
+  <!-- PWA Manifest & Icons -->
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="https://meridional.imb.br/images/favicon.png" />
+  <link rel="icon" type="image/png" href="https://meridional.imb.br/images/favicon.png" />
+
   <!-- SEO & Open Graph Meta Tags -->
-  <meta name="description" content="A Meridional Corretores Associados atua desde 1990 em Uberaba - MG com venda, locação, lançamentos e perícia de avaliação imobiliária nos melhores bairros e condomínios." />
+  <meta name="description" content="A Meridional Corretores Associados atua desde 1990 em Uberaba - MG com venda, locação, condomínios Damha, lançamentos e perícia judicial de avaliação imobiliária." />
   <meta name="keywords" content="imobiliaria uberaba, imoveis uberaba, casas damha uberaba, apartamentos uberaba, aluguel uberaba, perito avaliador uberaba, financiamento caixa" />
   <meta name="author" content="Imobiliária Meridional - CRECI 12632" />
   <meta property="og:title" content="Imobiliária Meridional | Sua Imobiliária em Uberaba MG" />
@@ -15,15 +20,48 @@
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://meridional.imb.br" />
   <meta property="og:image" content="https://meridional.imb.br/meridional.png" />
-  <link rel="icon" type="image/png" href="https://meridional.imb.br/images/favicon.png" />
 
-  <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+  <!-- 43. Schema.org Local Business SEO (JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "RealEstateAgent",
+    "name": "Imobiliária Meridional",
+    "image": "https://meridional.imb.br/meridional.png",
+    "telephone": "+55-34-3312-6702",
+    "email": "meridionaluberaba@gmail.com",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "Praça Dom Eduardo, 470 – Mercês",
+      "addressLocality": "Uberaba",
+      "addressRegion": "MG",
+      "postalCode": "38060-280",
+      "addressCountry": "BR"
+    },
+    "geo": {
+      "@type": "GeoCoordinates",
+      "latitude": -19.7430,
+      "longitude": -47.9380
+    },
+    "openingHoursSpecification": {
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+      "opens": "08:00",
+      "closes": "18:00"
+    }
+  }
+  </script>
+
+  <!-- Google Fonts: Plus Jakarta Sans & Inter (45. Preconnect) -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
 
   <!-- FontAwesome 6 Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <!-- Leaflet CSS for 9. Interactive Map View -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 
   <!-- Stylesheet -->
   <link rel="stylesheet" href="css/styles.css" />
@@ -65,20 +103,25 @@
         <a href="#simuladorSection" class="nav-link">Simulador Caixa</a>
         <a href="#peritoSection" class="nav-link">Perito Avaliador</a>
         <a href="#anunciarSection" class="nav-link">Cadastre seu Imóvel</a>
-        <a href="#quemsomosSection" class="nav-link">Quem Somos</a>
+        <a href="#faqSection" class="nav-link">Dúvidas Frequentes</a>
       </nav>
 
       <!-- Header Actions -->
       <div class="header-actions">
+        <!-- 9. Toggle Map Button -->
+        <button id="toggleMapBtn" class="chip-btn" style="display: none; padding: 0.4rem 0.85rem;" onclick="window.meridionalApp.toggleMapView()">
+          <i class="fa-solid fa-map-location-dot"></i> Ver no Mapa
+        </button>
+
         <!-- Theme Toggle -->
-        <button id="themeToggleBtn" class="btn-icon-circle" onclick="window.meridionalApp.toggleTheme()" title="Alternar Modo Escuro / Claro">
+        <button id="themeToggleBtn" class="btn-icon-circle" onclick="window.meridionalApp.toggleTheme()" title="Alternar Modo Escuro / Claro" aria-label="Alternar Tema">
           <i class="fa-solid fa-moon"></i>
         </button>
 
         <!-- Favorites Counter Button -->
-        <button class="btn-icon-circle" style="position: relative;" onclick="window.meridionalApp.showFavoritesOnly()" title="Meus Favoritos">
+        <button class="btn-icon-circle" style="position: relative;" onclick="window.meridionalApp.showFavoritesOnly()" title="Meus Favoritos" aria-label="Ver Favoritos">
           <i class="fa-solid fa-heart" style="color: #EF4444;"></i>
-          <span class="badge-count favorites-badge-count" style="display: none; position: absolute; top: -4px; right: -4px; background: #EF4444; color: #fff; font-size: 0.65rem; min-width: 18px; height: 18px; border-radius: 9px; align-items: center; justify-content: center; font-weight: 700;">0</span>
+          <span class="badge-count favorites-badge-count" style="display: none;">0</span>
         </button>
 
         <!-- WhatsApp Quick CTA -->
@@ -112,12 +155,15 @@
 
         <!-- Search Form -->
         <form id="mainSearchForm" class="search-grid">
+          <!-- 11. Autocomplete Input -->
           <div class="search-field">
             <label class="search-label" for="searchKeywordInput">Código ou Palavra-chave</label>
             <div class="search-input-wrap">
               <i class="fa-solid fa-magnifying-glass"></i>
-              <input type="text" id="searchKeywordInput" class="search-input" placeholder="Ex: Damha, ME-3277, Turim..." />
+              <input type="text" id="searchKeywordInput" class="search-input" placeholder="Ex: Damha, ME-3277, Turim..." autocomplete="off" />
             </div>
+            <!-- Autocomplete Suggestion Dropdown -->
+            <div id="searchAutocompleteDropdown" class="autocomplete-dropdown"></div>
           </div>
 
           <div class="search-field">
@@ -160,6 +206,9 @@
             <i class="fa-solid fa-search"></i> Buscar
           </button>
         </form>
+
+        <!-- 16. Recent Searches Chips -->
+        <div id="recentSearchesContainer" class="recent-searches-row"></div>
       </div>
 
       <!-- Quick Category Chips -->
@@ -186,7 +235,20 @@
     </div>
   </section>
 
-  <!-- Dynamic Search Results Section (Shown when filtered) -->
+  <!-- 9. Interactive Map View Section (Leaflet) -->
+  <section id="mapViewSection" class="section-padding" style="display: none;">
+    <div class="container">
+      <div class="section-header-wrap">
+        <div>
+          <span class="section-tag">Geolocalização em Uberaba</span>
+          <h2 class="section-title">Mapa Interativo de Imóveis</h2>
+        </div>
+      </div>
+      <div id="mapContainer" class="map-view-wrapper"></div>
+    </div>
+  </section>
+
+  <!-- Dynamic Search Results Section with 14. Sorting Dropdown -->
   <section id="searchResultsSection" class="section-padding" style="display: none; background: var(--bg-card-subtle);">
     <div class="container">
       <div class="search-results-box">
@@ -195,9 +257,18 @@
             <span class="section-tag">Resultado da Busca</span>
             <h2 id="searchResultsCount" class="section-title" style="margin-top: 0.2rem;">Imóveis Encontrados</h2>
           </div>
-          <button type="button" class="chip-btn" onclick="window.meridionalApp.resetFilters()">
-            <i class="fa-solid fa-rotate-right"></i> Limpar Filtros
-          </button>
+          <div style="display: flex; gap: 0.5rem; align-items: center;">
+            <label for="sortBySelect" style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted);">Ordenar:</label>
+            <select id="sortBySelect" class="search-select" style="height: 38px; padding: 0 0.75rem; width: auto;" onchange="window.meridionalApp.setSortBy(this.value)">
+              <option value="relevance">Mais Relevantes</option>
+              <option value="price-asc">Menor Preço</option>
+              <option value="price-desc">Maior Preço</option>
+              <option value="area-desc">Maior Área (m²)</option>
+            </select>
+            <button type="button" class="chip-btn" onclick="window.meridionalApp.resetFilters()">
+              <i class="fa-solid fa-rotate-right"></i> Limpar
+            </button>
+          </div>
         </div>
 
         <div id="searchResultsGrid" class="properties-grid">
@@ -343,7 +414,7 @@
     </div>
   </section>
 
-  <!-- Caixa & Banks Loan Simulator -->
+  <!-- 31, 32, 37. Caixa & Banks Loan Simulator (Enhanced SAC vs PRICE & FGTS) -->
   <section id="simuladorSection" class="section-padding">
     <div class="container">
       <div class="simulator-section">
@@ -351,8 +422,8 @@
           <div>
             <span class="section-tag">Crédito Habitacional</span>
             <h2 class="section-title" style="margin-top: 0.25rem; margin-bottom: 0.75rem;">Simulador de Financiamento Caixa & Bancos</h2>
-            <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.75rem;">
-              Simule as parcelas pelo Sistema de Amortização Constante (SAC). Prestamos assessoria completa no pleiteamento do seu financiamento junto à CEF.
+            <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 1.5rem;">
+              Compare as tabelas SAC (amortização constante) e PRICE (parcelas fixas). Prestamos assessoria completa no pleiteamento do seu financiamento junto à CEF.
             </p>
 
             <!-- Property Value Slider -->
@@ -367,14 +438,20 @@
             <!-- Down Payment Slider -->
             <div class="range-slider-group">
               <div class="range-label-row">
-                <span>Entrada (%):</span>
+                <span>Entrada em Recursos Próprios (%):</span>
                 <span id="simDownLabel" style="color: var(--primary);">R$ 100.000 (20%)</span>
               </div>
               <input type="range" id="simDownPayment" class="range-input" min="20" max="80" step="5" value="20" />
             </div>
 
+            <!-- 32. FGTS Amount Input -->
+            <div class="search-field" style="margin-bottom: 1.25rem;">
+              <label class="search-label" for="simFgtsAmount">Saldo de FGTS para Abater na Entrada (R$)</label>
+              <input type="number" id="simFgtsAmount" class="search-input" placeholder="Ex: 30000" value="0" />
+            </div>
+
             <!-- Term Months Select -->
-            <div class="search-field" style="margin-bottom: 1.5rem;">
+            <div class="search-field" style="margin-bottom: 1.25rem;">
               <label class="search-label" for="simTermMonths">Prazo do Financiamento</label>
               <select id="simTermMonths" class="search-select">
                 <option value="420">420 meses (35 anos)</option>
@@ -386,21 +463,26 @@
             </div>
           </div>
 
-          <!-- Calculated Results Card -->
+          <!-- Calculated Results Card (31. SAC vs PRICE) -->
           <div class="calc-result-card">
             <div>
-              <span style="font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.8;">Sistema de Amortização Constante (SAC)</span>
+              <span style="font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.8;">Comparativo Caixa / Bancos</span>
               <h3 style="color: #fff; font-size: 1.35rem; margin-top: 0.25rem;">Resultado da Simulação</h3>
             </div>
 
             <div class="calc-stat-row">
-              <span class="calc-stat-label">Primeira Parcela (Estimada):</span>
+              <span class="calc-stat-label">1ª Parcela (Sistema SAC):</span>
               <span id="simFirstInstallment" class="calc-stat-value highlight">R$ 4.378</span>
             </div>
 
             <div class="calc-stat-row">
-              <span class="calc-stat-label">Última Parcela (Estimada):</span>
+              <span class="calc-stat-label">Última Parcela (Sistema SAC):</span>
               <span id="simLastInstallment" class="calc-stat-value">R$ 1.120</span>
+            </div>
+
+            <div class="calc-stat-row">
+              <span class="calc-stat-label">Parcela Fixa (Sistema PRICE):</span>
+              <span id="simPriceInstallment" class="calc-stat-value" style="color: #60A5FA;">R$ 3.480</span>
             </div>
 
             <div class="calc-stat-row">
@@ -408,13 +490,18 @@
               <span id="simMinIncome" class="calc-stat-value" style="color: #FCD34D;">R$ 14.593</span>
             </div>
 
-            <div class="calc-stat-row" style="border: none;">
+            <div class="calc-stat-row" style="border: none; padding-bottom: 0;">
               <span class="calc-stat-label">Valor Financiado:</span>
               <span id="simLoanAmount" class="calc-stat-value">R$ 400.000</span>
             </div>
 
-            <a id="simWhatsappShareBtn" href="#" target="_blank" class="btn-header-cta" style="background: #25D366; justify-content: center; width: 100%; margin-top: 0.5rem; box-shadow: 0 4px 15px rgba(37,211,102,0.4);">
-              <i class="fa-brands fa-whatsapp"></i> Simular com Corretor no WhatsApp
+            <!-- 37. Closing Costs Estimator -->
+            <div id="simClosingCosts" style="font-size: 0.8rem; color: #A1A1AA; text-align: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 0.65rem;">
+              ITBI + Escritura Estimada: R$ 18.500
+            </div>
+
+            <a id="simWhatsappShareBtn" href="#" target="_blank" class="btn-header-cta" style="background: #25D366; justify-content: center; width: 100%; margin-top: 0.35rem; box-shadow: 0 4px 15px rgba(37,211,102,0.4);">
+              <i class="fa-brands fa-whatsapp"></i> Simular com Especialista Caixa
             </a>
           </div>
         </div>
@@ -517,8 +604,22 @@
     </div>
   </section>
 
+  <!-- 40. Interactive FAQ Accordion Section -->
+  <section id="faqSection" class="section-padding" style="background: var(--bg-card-subtle);">
+    <div class="container">
+      <div class="section-header-wrap" style="text-align: center; justify-content: center; flex-direction: column;">
+        <span class="section-tag">Central de Ajuda</span>
+        <h2 class="section-title">Perguntas Frequentes</h2>
+      </div>
+
+      <div id="faqContainer" class="faq-accordion">
+        <!-- Injected via JavaScript -->
+      </div>
+    </div>
+  </section>
+
   <!-- Quem Somos Section -->
-  <section id="quemsomosSection" class="section-padding" style="background: var(--bg-card-subtle);">
+  <section id="quemsomosSection" class="section-padding">
     <div class="container">
       <div style="display: grid; grid-template-columns: 1fr; gap: 2.5rem; align-items: center;" class="quemsomos-grid">
         <div>
@@ -554,8 +655,8 @@
     </div>
   </section>
 
-  <!-- Affiliated & Simulator Banners (Original Site Assets) -->
-  <section class="section-padding">
+  <!-- Affiliated & Simulator Banners -->
+  <section class="section-padding" style="background: var(--bg-card-subtle);">
     <div class="container">
       <div style="text-align: center; margin-bottom: 1.5rem;">
         <span class="section-tag">Credibilidade & Parcerias</span>
@@ -584,13 +685,13 @@
             A sua imobiliária em Uberaba desde 1990. Especialistas em vendas, locações, condomínios fechados, lançamentos e perícias judiciais.
           </p>
           <div style="display: flex; gap: 0.75rem;">
-            <a href="https://www.instagram.com/meridionaluberaba/" target="_blank" class="btn-icon-circle" style="background: rgba(255,255,255,0.1); color: #fff; border-color: rgba(255,255,255,0.2);">
+            <a href="https://www.instagram.com/meridionaluberaba/" target="_blank" class="btn-icon-circle" style="background: rgba(255,255,255,0.1); color: #fff; border-color: rgba(255,255,255,0.2);" aria-label="Instagram">
               <i class="fa-brands fa-instagram"></i>
             </a>
-            <a href="https://www.facebook.com/Meridional-178539326352585" target="_blank" class="btn-icon-circle" style="background: rgba(255,255,255,0.1); color: #fff; border-color: rgba(255,255,255,0.2);">
+            <a href="https://www.facebook.com/Meridional-178539326352585" target="_blank" class="btn-icon-circle" style="background: rgba(255,255,255,0.1); color: #fff; border-color: rgba(255,255,255,0.2);" aria-label="Facebook">
               <i class="fa-brands fa-facebook-f"></i>
             </a>
-            <a href="https://api.whatsapp.com/send?phone=553499604600" target="_blank" class="btn-icon-circle" style="background: #25D366; color: #fff; border-color: transparent;">
+            <a href="https://api.whatsapp.com/send?phone=553499604600" target="_blank" class="btn-icon-circle" style="background: #25D366; color: #fff; border-color: transparent;" aria-label="WhatsApp">
               <i class="fa-brands fa-whatsapp"></i>
             </a>
           </div>
@@ -613,7 +714,7 @@
             <li><a href="#simuladorSection" class="footer-link">Simulador Caixa</a></li>
             <li><a href="#peritoSection" class="footer-link">Perito Avaliador (CNAI)</a></li>
             <li><a href="#anunciarSection" class="footer-link">Cadastre seu Imóvel</a></li>
-            <li><a href="#quemsomosSection" class="footer-link">Quem Somos</a></li>
+            <li><a href="#faqSection" class="footer-link">Dúvidas Frequentes</a></li>
           </ul>
         </div>
 
@@ -641,6 +742,27 @@
     </div>
   </footer>
 
+  <!-- 28. Sticky Comparator Bar -->
+  <div id="comparatorBar" class="comparator-bar">
+    <div style="display: flex; align-items: center; gap: 0.75rem;">
+      <i class="fa-solid fa-code-compare" style="color: var(--primary); font-size: 1.25rem;"></i>
+      <span id="comparatorCount" style="font-weight: 700; font-size: 0.9rem;">0 imóveis selecionados</span>
+    </div>
+    <div style="display: flex; gap: 0.5rem;">
+      <button type="button" class="btn-card-details" style="background: var(--primary); color: #fff; padding: 0.45rem 0.85rem; font-size: 0.85rem;" onclick="window.meridionalApp.openCompareModal()">
+        Comparar Agora
+      </button>
+      <button type="button" class="btn-icon-circle" style="width: 32px; height: 32px; background: rgba(255,255,255,0.2); color: #fff; border: none;" onclick="window.meridionalApp.comparedProperties = []; window.meridionalApp.updateComparatorBar(); window.meridionalApp.renderAllHorizontalSections();">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- 7. Scroll to Top Floating Button -->
+  <button id="scrollToTopBtn" class="btn-scroll-top" title="Voltar ao Topo" aria-label="Voltar ao Topo">
+    <i class="fa-solid fa-arrow-up"></i>
+  </button>
+
   <!-- Mobile Bottom Navigation Bar (App Experience) -->
   <nav class="mobile-bottom-nav">
     <a href="#" class="bottom-nav-item active" onclick="window.meridionalApp.resetFilters()">
@@ -667,7 +789,7 @@
   </nav>
 
   <!-- Floating WhatsApp Action Button -->
-  <a href="https://api.whatsapp.com/send?phone=553499604600&text=Ol%C3%A1!%20Estou%20no%20site%20da%20Imobili%C3%A1ria%20Meridional%20e%20gostaria%20de%20informa%C3%A7%C3%B5es." target="_blank" class="floating-whatsapp" title="Fale com nosso Plantão no WhatsApp">
+  <a href="https://api.whatsapp.com/send?phone=553499604600&text=Ol%C3%A1!%20Estou%20no%20site%20da%20Imobili%C3%A1ria%20Meridional%20e%20gostaria%20de%20informa%C3%A7%C3%B5es." target="_blank" class="floating-whatsapp" title="Fale com nosso Plantão no WhatsApp" aria-label="WhatsApp Plantão">
     <div class="whatsapp-pulse"></div>
     <i class="fa-brands fa-whatsapp"></i>
   </a>
@@ -675,16 +797,35 @@
   <!-- Fullscreen Property Detail Modal -->
   <div id="propertyDetailModal" class="modal-overlay">
     <div class="modal-sheet">
-      <button type="button" id="modalCloseBtn" class="modal-close-btn" title="Fechar Modal">
+      <button type="button" class="modal-close-btn" title="Fechar Modal" aria-label="Fechar">
         <i class="fa-solid fa-xmark"></i>
       </button>
-      <div id="modalContent">
-        <!-- Injected via JavaScript -->
-      </div>
+      <div id="modalContent"></div>
+    </div>
+  </div>
+
+  <!-- 28. Compare Properties Modal -->
+  <div id="compareModal" class="modal-overlay">
+    <div class="modal-sheet">
+      <button type="button" class="modal-close-btn" title="Fechar Modal" aria-label="Fechar">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <div id="compareModalContent"></div>
+    </div>
+  </div>
+
+  <!-- 30 & 33. Action Modal (Agendamento & Proposta Online) -->
+  <div id="actionModal" class="modal-overlay">
+    <div class="modal-sheet" style="max-width: 540px;">
+      <button type="button" class="modal-close-btn" title="Fechar Modal" aria-label="Fechar">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <div id="actionModalContent"></div>
     </div>
   </div>
 
   <!-- Scripts -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <script src="js/data.js"></script>
   <script src="js/simulator.js"></script>
   <script src="js/app.js"></script>
