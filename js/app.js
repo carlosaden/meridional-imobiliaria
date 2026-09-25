@@ -1,11 +1,11 @@
 /**
  * Imobiliária Meridional - Core Application Logic
- * Single Page App Controller, Responsive Interactive Filters, Modals & Integrations
+ * Suporte a Listas Horizontais por Seção, Filtros Dinâmicos Robustos e Modais
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-  const app = new MeridionalApp();
-  app.init();
+  window.meridionalApp = new MeridionalApp();
+  window.meridionalApp.init();
 });
 
 class MeridionalApp {
@@ -17,19 +17,15 @@ class MeridionalApp {
       purpose: 'todos',
       type: 'todos',
       neighborhood: 'todos',
-      maxPrice: Infinity,
-      keyword: ''
+      keyword: '',
+      activeSearch: false
     };
     this.currentTheme = localStorage.getItem('meridional_theme') || 'light';
   }
 
   init() {
     this.setupTheme();
-    this.renderFeaturedProperties();
-    this.renderDevelopments();
-    this.renderNeighborhoods();
-    this.renderBlogPosts();
-    this.renderAllProperties();
+    this.renderAllHorizontalSections();
     this.setupEventListeners();
     this.setupSimulator();
     this.setupOwnerWizard();
@@ -79,8 +75,10 @@ class MeridionalApp {
       this.showToast('Imóvel salvo nos favoritos! ❤️');
     }
     this.saveFavorites();
-    this.renderAllProperties();
-    this.renderFeaturedProperties();
+    this.renderAllHorizontalSections();
+    if (this.currentFilter.activeSearch) {
+      this.executeSearch(false);
+    }
   }
 
   updateFavoritesCount() {
@@ -91,18 +89,27 @@ class MeridionalApp {
     });
   }
 
-  // --- Rendering Functions ---
-  renderPropertyCard(prop) {
+  // --- Horizontal Scroll Helper ---
+  scrollRow(containerId, direction) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    const scrollAmount = direction === 'left' ? -340 : 340;
+    container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+  }
+
+  // --- Property Card HTML Generator ---
+  renderPropertyCard(prop, isHorizontal = true) {
     const isFav = this.favorites.includes(prop.id);
     const priceFormatted = prop.purpose === 'aluguel' 
       ? `R$ ${prop.rentalPrice.toLocaleString('pt-BR')}` 
       : `R$ ${prop.price.toLocaleString('pt-BR')}`;
     const period = prop.purpose === 'aluguel' ? '/mês' : '';
+    const cardClass = isHorizontal ? 'property-card-horizontal' : 'property-card';
     
     return `
-      <article class="property-card" data-id="${prop.id}">
+      <article class="${cardClass}" data-id="${prop.id}">
         <div class="card-image-wrap">
-          <img src="${prop.images[0]}" alt="${prop.title}" class="card-image" loading="lazy" />
+          <img src="${prop.images[0]}" alt="${prop.title}" class="card-image" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=80'" />
           ${prop.badge ? `<span class="card-badge">${prop.badge}</span>` : ''}
           <span class="card-purpose-badge">${prop.purpose.toUpperCase()}</span>
           <button class="card-favorite-btn ${isFav ? 'favorited' : ''}" onclick="window.meridionalApp.toggleFavorite('${prop.id}', event)" title="Favoritar Imóvel">
@@ -112,11 +119,11 @@ class MeridionalApp {
 
         <div class="card-content">
           <div class="card-location">
-            <i class="fa-solid fa-location-dot"></i>
+            <i class="fa-solid fa-location-dot" style="color: var(--primary);"></i>
             <span>${prop.neighborhood}, ${prop.city}</span>
           </div>
 
-          <h3 class="card-title">${prop.title}</h3>
+          <h3 class="card-title" title="${prop.title}">${prop.title}</h3>
 
           <div class="card-price-row">
             <span class="card-price">${priceFormatted}</span>
@@ -150,7 +157,7 @@ class MeridionalApp {
             <button class="btn-card-details" onclick="window.meridionalApp.openPropertyModal('${prop.id}')">
               Ver Detalhes
             </button>
-            <a href="${this.getWhatsAppLink(prop)}" target="_blank" class="btn-card-whatsapp" title="Falar com Corretor">
+            <a href="${this.getWhatsAppLink(prop)}" target="_blank" class="btn-card-whatsapp" title="Falar com Corretor no WhatsApp">
               <i class="fa-brands fa-whatsapp"></i>
             </a>
           </div>
@@ -159,122 +166,246 @@ class MeridionalApp {
     `;
   }
 
-  renderFeaturedProperties() {
-    const container = document.getElementById('featuredPropertiesContainer');
-    if (!container) return;
-    const featured = this.data.properties.filter(p => p.featured);
-    container.innerHTML = featured.map(p => this.renderPropertyCard(p)).join('');
+  // --- Render All Horizontal Lists by Category ---
+  renderAllHorizontalSections() {
+    // 1. Destaques de Venda
+    const vendaContainer = document.getElementById('vendaHorizontalContainer');
+    if (vendaContainer) {
+      const vendaProps = this.data.properties.filter(p => p.purpose === 'venda');
+      vendaContainer.innerHTML = vendaProps.map(p => this.renderPropertyCard(p, true)).join('');
+    }
+
+    // 2. Destaques de Locação
+    const aluguelContainer = document.getElementById('aluguelHorizontalContainer');
+    if (aluguelContainer) {
+      const aluguelProps = this.data.properties.filter(p => p.purpose === 'aluguel');
+      aluguelContainer.innerHTML = aluguelProps.map(p => this.renderPropertyCard(p, true)).join('');
+    }
+
+    // 3. Condomínios Fechados (Damha & Flamboyant)
+    const condominiosContainer = document.getElementById('condominiosHorizontalContainer');
+    if (condominiosContainer) {
+      const condoProps = this.data.properties.filter(p => p.category === 'condominio' || p.neighborhood.toLowerCase().includes('damha') || p.neighborhood.toLowerCase().includes('flamboyant'));
+      condominiosContainer.innerHTML = condoProps.map(p => this.renderPropertyCard(p, true)).join('');
+    }
+
+    // 4. Comerciais & Galpões
+    const comerciaisContainer = document.getElementById('comerciaisHorizontalContainer');
+    if (comerciaisContainer) {
+      const comProps = this.data.properties.filter(p => p.type === 'comercial' || p.category === 'galpao');
+      comerciaisContainer.innerHTML = comProps.map(p => this.renderPropertyCard(p, true)).join('');
+    }
+
+    // 5. Lançamentos com Banners Originais
+    const devContainer = document.getElementById('lancamentosHorizontalContainer');
+    if (devContainer) {
+      devContainer.innerHTML = this.data.developments.map(dev => `
+        <div class="dev-card">
+          <img src="${dev.banner}" alt="${dev.title}" class="dev-bg" onerror="this.src='https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1200&q=80'" />
+          <div class="dev-overlay"></div>
+          <div class="dev-content">
+            <span class="dev-badge">${dev.badge}</span>
+            <h3 class="dev-title">${dev.title}</h3>
+            <p class="dev-subtitle">${dev.type} • ${dev.neighborhood}</p>
+            <div class="dev-highlights">
+              ${dev.highlights.slice(0, 3).map(h => `<span class="dev-tag">${h}</span>`).join('')}
+            </div>
+            <div class="dev-price-btn">
+              <div>
+                <span style="font-size: 0.72rem; opacity: 0.8; display: block;">A partir de</span>
+                <span class="dev-price-val">R$ ${dev.priceFrom.toLocaleString('pt-BR')}</span>
+              </div>
+              <a href="https://api.whatsapp.com/send?phone=${this.data.company.whatsappClean}&text=Ol%C3%A1!%20Gostaria%20de%20informa%C3%A7%C3%B5es%20sobre%20o%20lan%C3%A7amento%20${encodeURIComponent(dev.title)}%20em%20Uberaba." target="_blank" class="btn-card-details" style="background: var(--primary); padding: 0.5rem 1rem; width: auto; flex: initial;">
+                Quero Saber Mais <i class="fa-brands fa-whatsapp"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // 6. Guia de Bairros
+    const neighContainer = document.getElementById('neighborhoodsHorizontalContainer');
+    if (neighContainer) {
+      neighContainer.innerHTML = this.data.neighborhoods.map(n => `
+        <div class="property-card-horizontal" style="padding: 1.25rem; cursor: pointer; flex: 0 0 260px;" onclick="window.meridionalApp.filterByNeighborhood('${n.name}')">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.5rem;">
+            <span class="card-badge" style="position: static;">${n.tag}</span>
+            <span style="font-size: 0.82rem; font-weight: 800; color: var(--primary);">${n.listings}+ imóveis</span>
+          </div>
+          <h4 style="font-size: 1.15rem; font-weight: 800; margin-bottom: 0.35rem;">${n.name}</h4>
+          <p style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.4;">${n.desc}</p>
+        </div>
+      `).join('');
+    }
+
+    // 7. Blog Posts
+    const blogContainer = document.getElementById('blogContainer');
+    if (blogContainer) {
+      blogContainer.innerHTML = this.data.blogPosts.map(post => `
+        <article class="property-card-horizontal" style="flex: 0 0 320px;">
+          <div class="card-image-wrap" style="aspect-ratio: 16/9;">
+            <img src="${post.image}" alt="${post.title}" class="card-image" />
+            <span class="card-badge">${post.category}</span>
+          </div>
+          <div class="card-content">
+            <div style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 0.4rem;">
+              <span>${post.date}</span> • <span>${post.readTime}</span>
+            </div>
+            <h4 style="font-size: 1.05rem; font-weight: 700; line-height: 1.35; margin-bottom: 0.5rem;">${post.title}</h4>
+            <p style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.45; margin-bottom: 0.85rem;">${post.summary}</p>
+            <a href="https://api.whatsapp.com/send?phone=${this.data.company.whatsappClean}&text=Ol%C3%A1!%20Li%20a%20mat%C3%A9ria%20'${encodeURIComponent(post.title)}'%20e%20gostaria%20de%20tirar%20d%C3%BAvidas." target="_blank" style="color: var(--primary); font-weight: 700; font-size: 0.88rem; display: flex; align-items: center; gap: 0.4rem;">
+              Saber mais <i class="fa-solid fa-arrow-right"></i>
+            </a>
+          </div>
+        </article>
+      `).join('');
+    }
   }
 
-  renderAllProperties() {
-    const container = document.getElementById('catalogContainer');
-    if (!container) return;
+  // --- Search & Filter Logic ---
+  executeSearch(shouldScroll = true) {
+    this.currentFilter.activeSearch = true;
+    const resultsSection = document.getElementById('searchResultsSection');
+    const resultsGrid = document.getElementById('searchResultsGrid');
+    const resultsCount = document.getElementById('searchResultsCount');
 
-    let filtered = this.data.properties.filter(p => {
-      // Filter by Purpose
-      if (this.currentFilter.purpose !== 'todos' && p.purpose !== this.currentFilter.purpose) return false;
-      // Filter by Type
-      if (this.currentFilter.type !== 'todos' && p.type !== this.currentFilter.type && p.category !== this.currentFilter.type) return false;
-      // Filter by Neighborhood
-      if (this.currentFilter.neighborhood !== 'todos' && p.neighborhood.toLowerCase() !== this.currentFilter.neighborhood.toLowerCase()) return false;
-      // Filter by Keyword
-      if (this.currentFilter.keyword) {
-        const kw = this.currentFilter.keyword.toLowerCase();
-        const match = p.title.toLowerCase().includes(kw) || 
-                      p.neighborhood.toLowerCase().includes(kw) || 
-                      p.code.toLowerCase().includes(kw) ||
-                      p.description.toLowerCase().includes(kw);
-        if (!match) return false;
+    if (!resultsSection || !resultsGrid) return;
+
+    const filtered = this.data.properties.filter(p => {
+      // 1. Purpose (Venda / Aluguel)
+      if (this.currentFilter.purpose !== 'todos' && p.purpose !== this.currentFilter.purpose) {
+        return false;
       }
+
+      // 2. Type (Casa / Apartamento / Comercial / Terreno / Condominio)
+      if (this.currentFilter.type !== 'todos') {
+        const t = this.currentFilter.type.toLowerCase();
+        const pType = (p.type || '').toLowerCase();
+        const pCat = (p.category || '').toLowerCase();
+        if (pType !== t && pCat !== t) return false;
+      }
+
+      // 3. Neighborhood
+      if (this.currentFilter.neighborhood !== 'todos') {
+        const targetNeigh = this.currentFilter.neighborhood.toLowerCase();
+        const pNeigh = p.neighborhood.toLowerCase();
+        if (!pNeigh.includes(targetNeigh) && !targetNeigh.includes(pNeigh)) return false;
+      }
+
+      // 4. Keyword / Code
+      if (this.currentFilter.keyword && this.currentFilter.keyword.trim() !== '') {
+        const kw = this.currentFilter.keyword.toLowerCase().trim();
+        const matchTitle = p.title.toLowerCase().includes(kw);
+        const matchCode = p.code.toLowerCase().includes(kw) || p.id.includes(kw);
+        const matchNeigh = p.neighborhood.toLowerCase().includes(kw);
+        const matchDesc = p.description.toLowerCase().includes(kw);
+        if (!matchTitle && !matchCode && !matchNeigh && !matchDesc) return false;
+      }
+
+      // 5. Only Favorites
+      if (this.currentFilter.onlyFavorites) {
+        if (!this.favorites.includes(p.id)) return false;
+      }
+
       return true;
     });
 
-    // Check if viewing Favorites tab
-    if (this.currentFilter.onlyFavorites) {
-      filtered = filtered.filter(p => this.favorites.includes(p.id));
-    }
+    resultsSection.style.display = 'block';
+    resultsCount.textContent = `${filtered.length} ${filtered.length === 1 ? 'imóvel encontrado' : 'imóveis encontrados'}`;
 
     if (filtered.length === 0) {
-      container.innerHTML = `
-        <div style="grid-column: 1 / -1; text-align: center; padding: 4rem 1rem; color: var(--text-muted);">
-          <i class="fa-solid fa-magnifying-glass" style="font-size: 2.5rem; margin-bottom: 1rem; opacity: 0.5;"></i>
-          <h3>Nenhum imóvel encontrado com esses filtros</h3>
-          <p style="margin-top: 0.5rem; font-size: 0.95rem;">Tente ajustar o bairro, faixa de preço ou categoria para ver mais opções.</p>
-          <button class="btn-header-cta" style="margin: 1.5rem auto 0 auto;" onclick="window.meridionalApp.resetFilters()">
-            Limpar Filtros
+      resultsGrid.innerHTML = `
+        <div style="grid-column: 1 / -1; text-align: center; padding: 3rem 1rem; color: var(--text-muted);">
+          <i class="fa-solid fa-magnifying-glass" style="font-size: 2.5rem; margin-bottom: 1rem; opacity: 0.4; color: var(--primary);"></i>
+          <h3 style="font-size: 1.35rem; color: var(--text-main);">Nenhum imóvel correspondeu aos seus critérios</h3>
+          <p style="margin-top: 0.5rem; font-size: 0.95rem;">Experimente selecionar outro bairro ou buscar por termos mais amplos.</p>
+          <button class="btn-search-submit" style="margin: 1.5rem auto 0 auto; width: auto; padding: 0 1.5rem;" onclick="window.meridionalApp.resetFilters()">
+            Ver Todos os Imóveis
           </button>
         </div>
       `;
-      return;
+    } else {
+      resultsGrid.innerHTML = filtered.map(p => this.renderPropertyCard(p, false)).join('');
     }
 
-    container.innerHTML = filtered.map(p => this.renderPropertyCard(p)).join('');
+    if (shouldScroll) {
+      resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    this.showToast(`${filtered.length} imóveis filtrados com sucesso!`);
   }
 
-  renderDevelopments() {
-    const container = document.getElementById('developmentsContainer');
-    if (!container) return;
-    container.innerHTML = this.data.developments.map(dev => `
-      <div class="dev-card">
-        <img src="${dev.banner}" alt="${dev.title}" class="dev-bg" />
-        <div class="dev-overlay"></div>
-        <div class="dev-content">
-          <span class="dev-badge">${dev.badge}</span>
-          <h3 class="dev-title">${dev.title}</h3>
-          <p class="dev-subtitle">${dev.type} • ${dev.neighborhood}</p>
-          <div class="dev-highlights">
-            ${dev.highlights.slice(0, 3).map(h => `<span class="dev-tag">${h}</span>`).join('')}
-          </div>
-          <div class="dev-price-btn">
-            <div>
-              <span style="font-size: 0.75rem; opacity: 0.8; display: block;">A partir de</span>
-              <span class="dev-price-val">R$ ${dev.priceFrom.toLocaleString('pt-BR')}</span>
-            </div>
-            <a href="https://api.whatsapp.com/send?phone=${this.data.company.whatsappClean}&text=Ol%C3%A1!%20Gostaria%20de%20informa%C3%A7%C3%B5es%20sobre%20o%20lan%C3%A7amento%20${encodeURIComponent(dev.title)}%20em%20Uberaba." target="_blank" class="btn-header-cta" style="padding: 0.5rem 1rem;">
-              Quero Conhecer <i class="fa-brands fa-whatsapp"></i>
-            </a>
-          </div>
-        </div>
-      </div>
-    `).join('');
+  setPurposeFilter(purpose) {
+    this.currentFilter.purpose = purpose;
+    this.currentFilter.onlyFavorites = false;
+    document.querySelectorAll('.search-tab-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.getAttribute('data-purpose') === purpose);
+    });
+    this.executeSearch(true);
   }
 
-  renderNeighborhoods() {
-    const container = document.getElementById('neighborhoodsContainer');
-    if (!container) return;
-    container.innerHTML = this.data.neighborhoods.map(n => `
-      <div class="property-card" style="padding: 1.5rem; cursor: pointer;" onclick="window.meridionalApp.filterByNeighborhood('${n.name}')">
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.75rem;">
-          <span class="card-badge" style="position: static;">${n.tag}</span>
-          <span style="font-size: 0.82rem; font-weight: 700; color: var(--primary);">${n.listings}+ imóveis</span>
-        </div>
-        <h4 style="font-size: 1.25rem; font-weight: 800; margin-bottom: 0.35rem;">${n.name}</h4>
-        <p style="font-size: 0.85rem; color: var(--text-muted); line-height: 1.5;">${n.desc}</p>
-      </div>
-    `).join('');
+  setCategoryChip(category) {
+    this.currentFilter.type = category;
+    this.currentFilter.onlyFavorites = false;
+    document.querySelectorAll('.chip-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.getAttribute('data-category') === category);
+    });
+    this.executeSearch(true);
   }
 
-  renderBlogPosts() {
-    const container = document.getElementById('blogContainer');
-    if (!container) return;
-    container.innerHTML = this.data.blogPosts.map(post => `
-      <article class="property-card">
-        <div class="card-image-wrap" style="aspect-ratio: 16/9;">
-          <img src="${post.image}" alt="${post.title}" class="card-image" />
-          <span class="card-badge">${post.category}</span>
-        </div>
-        <div class="card-content">
-          <div style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 0.5rem;">
-            <span>${post.date}</span> • <span>${post.readTime}</span>
-          </div>
-          <h4 style="font-size: 1.1rem; font-weight: 700; line-height: 1.4; margin-bottom: 0.75rem;">${post.title}</h4>
-          <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1rem;">${post.summary}</p>
-          <a href="https://api.whatsapp.com/send?phone=${this.data.company.whatsappClean}&text=Ol%C3%A1!%20Li%20a%20mat%C3%A9ria%20'${encodeURIComponent(post.title)}'%20e%20gostaria%20de%20tirar%20d%C3%BAvidas." target="_blank" style="color: var(--primary); font-weight: 700; font-size: 0.9rem; display: flex; align-items: center; gap: 0.4rem;">
-            Saber mais <i class="fa-solid fa-arrow-right"></i>
-          </a>
-        </div>
-      </article>
-    `).join('');
+  filterByNeighborhood(neighborhood) {
+    this.currentFilter.neighborhood = neighborhood;
+    const select = document.getElementById('searchNeighborhoodSelect');
+    if (select) {
+      // Set dropdown value if available
+      for (let i = 0; i < select.options.length; i++) {
+        if (select.options[i].text.toLowerCase().includes(neighborhood.toLowerCase())) {
+          select.selectedIndex = i;
+          break;
+        }
+      }
+    }
+    this.executeSearch(true);
+  }
+
+  showFavoritesOnly() {
+    this.currentFilter.onlyFavorites = true;
+    this.executeSearch(true);
+  }
+
+  resetFilters() {
+    this.currentFilter = {
+      purpose: 'todos',
+      type: 'todos',
+      neighborhood: 'todos',
+      keyword: '',
+      activeSearch: false,
+      onlyFavorites: false
+    };
+
+    const searchInput = document.getElementById('searchKeywordInput');
+    if (searchInput) searchInput.value = '';
+
+    const neighSelect = document.getElementById('searchNeighborhoodSelect');
+    if (neighSelect) neighSelect.value = 'todos';
+
+    const typeSelect = document.getElementById('searchTypeSelect');
+    if (typeSelect) typeSelect.value = 'todos';
+
+    document.querySelectorAll('.chip-btn').forEach(b => b.classList.remove('active'));
+    const firstChip = document.querySelector('.chip-btn[data-category="todos"]');
+    if (firstChip) firstChip.classList.add('active');
+    
+    document.querySelectorAll('.search-tab-btn').forEach(b => b.classList.remove('active'));
+    const firstTab = document.querySelector('.search-tab-btn[data-purpose="todos"]');
+    if (firstTab) firstTab.classList.add('active');
+
+    const resultsSection = document.getElementById('searchResultsSection');
+    if (resultsSection) resultsSection.style.display = 'none';
+
+    this.showToast('Filtros limpos');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   // --- Modals & Property Details ---
@@ -292,38 +423,38 @@ class MeridionalApp {
 
     content.innerHTML = `
       <div style="position: relative;">
-        <!-- Image Slider / Gallery -->
+        <!-- Main Image -->
         <div style="position: relative; aspect-ratio: 16/9; overflow: hidden; background: #000;">
-          <img id="modalMainImg" src="${prop.images[0]}" alt="${prop.title}" style="width: 100%; height: 100%; object-fit: cover;" />
+          <img id="modalMainImg" src="${prop.images[0]}" alt="${prop.title}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80'" />
           <span class="card-badge" style="position: absolute; top: 1rem; left: 1rem;">${prop.badge || prop.type.toUpperCase()}</span>
           <span class="card-purpose-badge" style="position: absolute; top: 1rem; right: 4rem;">${prop.purpose.toUpperCase()}</span>
         </div>
         
         <!-- Thumbnails -->
-        <div style="display: flex; gap: 0.5rem; padding: 0.75rem 1.5rem; overflow-x: auto; background: var(--bg-card-subtle);">
+        <div style="display: flex; gap: 0.5rem; padding: 0.75rem 1.25rem; overflow-x: auto; background: var(--bg-card-subtle);">
           ${prop.images.map((img, idx) => `
-            <img src="${img}" style="width: 70px; height: 50px; object-fit: cover; border-radius: var(--radius-sm); cursor: pointer; border: 2px solid ${idx === 0 ? 'var(--primary)' : 'transparent'};" onclick="document.getElementById('modalMainImg').src='${img}'" />
+            <img src="${img}" style="width: 70px; height: 50px; object-fit: cover; border-radius: var(--radius-sm); cursor: pointer; border: 2px solid ${idx === 0 ? 'var(--primary)' : 'transparent'};" onclick="document.getElementById('modalMainImg').src='${img}'" onerror="this.src='https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=80'" />
           `).join('')}
         </div>
       </div>
 
-      <div style="padding: 1.75rem;">
-        <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: 1rem;">
+      <div style="padding: 1.5rem;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: 1rem; flex-wrap: wrap;">
           <div>
-            <span style="font-size: 0.85rem; font-weight: 700; color: var(--primary);">Código: ${prop.code}</span>
-            <h2 style="font-size: 1.6rem; font-weight: 800; margin-top: 0.25rem;">${prop.title}</h2>
-            <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 0.25rem;">
-              <i class="fa-solid fa-location-dot"></i> ${prop.address}, ${prop.neighborhood}, ${prop.city} - ${prop.state}
+            <span style="font-size: 0.85rem; font-weight: 800; color: var(--primary);">Código: ${prop.code}</span>
+            <h2 style="font-size: 1.5rem; font-weight: 800; margin-top: 0.25rem;">${prop.title}</h2>
+            <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.25rem;">
+              <i class="fa-solid fa-location-dot" style="color: var(--primary);"></i> ${prop.address}, ${prop.neighborhood}, ${prop.city} - ${prop.state}
             </p>
           </div>
-          <div style="text-align: right;">
-            <span style="font-size: 1.75rem; font-weight: 800; color: var(--primary); display: block;">${priceFormatted}</span>
-            ${prop.condoFee ? `<span style="font-size: 0.82rem; color: var(--text-muted);">Condomínio: R$ ${prop.condoFee} | IPTU: R$ ${prop.iptu}</span>` : ''}
+          <div>
+            <span style="font-size: 1.65rem; font-weight: 800; color: var(--primary); display: block;">${priceFormatted}</span>
+            ${prop.condoFee ? `<span style="font-size: 0.8rem; color: var(--text-muted);">Condomínio: R$ ${prop.condoFee} | IPTU: R$ ${prop.iptu}</span>` : ''}
           </div>
         </div>
 
         <!-- Specs Row -->
-        <div class="card-specs" style="margin: 1.5rem 0;">
+        <div class="card-specs" style="margin: 1.25rem 0;">
           <div class="spec-item">
             <i class="fa-solid fa-ruler-combined"></i>
             <span class="spec-value">${prop.area} m²</span>
@@ -348,32 +479,32 @@ class MeridionalApp {
 
         <!-- Description -->
         <div style="margin-bottom: 1.5rem;">
-          <h4 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem;">Sobre este imóvel</h4>
-          <p style="color: var(--text-main); font-size: 0.95rem; line-height: 1.6;">${prop.description}</p>
+          <h4 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 0.4rem;">Descrição do Imóvel</h4>
+          <p style="color: var(--text-main); font-size: 0.92rem; line-height: 1.6;">${prop.description}</p>
         </div>
 
         <!-- Features List -->
-        <div style="margin-bottom: 2rem;">
-          <h4 style="font-size: 1.1rem; font-weight: 700; margin-bottom: 0.75rem;">Diferenciais e Comodidades</h4>
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.5rem;">
+        <div style="margin-bottom: 1.5rem;">
+          <h4 style="font-size: 1.05rem; font-weight: 700; margin-bottom: 0.6rem;">Características & Diferenciais</h4>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.45rem;">
             ${prop.features.map(f => `
-              <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: var(--text-main);">
-                <i class="fa-solid fa-circle-check" style="color: var(--primary);"></i>
+              <div style="display: flex; align-items: center; gap: 0.45rem; font-size: 0.88rem;">
+                <i class="fa-solid fa-circle-check" style="color: var(--secondary);"></i>
                 <span>${f}</span>
               </div>
             `).join('')}
           </div>
         </div>
 
-        <!-- Quick Mortgage CTA & Direct Contact -->
-        <div style="background: var(--bg-card-subtle); border-radius: var(--radius-lg); padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; border: 1px solid var(--border-light);">
+        <!-- Direct Contact WhatsApp CTA -->
+        <div style="background: var(--bg-card-subtle); border-radius: var(--radius-lg); padding: 1.25rem; display: flex; flex-direction: column; gap: 0.75rem; border: 1px solid var(--border-light);">
           <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
             <div>
-              <h4 style="font-size: 1.1rem; font-weight: 700;">Interessou-se por este imóvel?</h4>
-              <p style="font-size: 0.85rem; color: var(--text-muted);">Atendimento imediato de nossos corretores e peritos credenciados.</p>
+              <h4 style="font-size: 1.05rem; font-weight: 700;">Gostou deste imóvel?</h4>
+              <p style="font-size: 0.82rem; color: var(--text-muted);">Fale diretamente com nosso corretor de plantão credenciado.</p>
             </div>
             <a href="${this.getWhatsAppLink(prop)}" target="_blank" class="btn-header-cta" style="background: #25D366; box-shadow: 0 4px 12px rgba(37,211,102,0.3);">
-              <i class="fa-brands fa-whatsapp"></i> Falar no WhatsApp Agora
+              <i class="fa-brands fa-whatsapp"></i> Falar no WhatsApp
             </a>
           </div>
         </div>
@@ -449,69 +580,12 @@ class MeridionalApp {
 
       const text = `Ol%C3%A1!%20Quero%20cadastrar%20meu%20im%C3%B3vel%20na%20Meridional:%0A- Propriet%C3%A1rio:%20${encodeURIComponent(name)}%0A- Telefone:%20${encodeURIComponent(phone)}%0A- Finalidade:%20${encodeURIComponent(purpose)}%0A- Tipo:%20${encodeURIComponent(type)}%0A- Bairro:%20${encodeURIComponent(neighborhood)}%0A- Valor:%20R$%20${encodeURIComponent(price)}`;
       
-      this.showToast('Redirecionando para o corretor de plantão no WhatsApp...');
+      this.showToast('Encaminhando para o corretor no WhatsApp...');
       setTimeout(() => {
         window.open(`https://api.whatsapp.com/send?phone=${this.data.company.whatsappClean}&text=${text}`, '_blank');
         wizard.reset();
-      }, 800);
+      }, 600);
     });
-  }
-
-  // --- Filtering & Search ---
-  setPurposeFilter(purpose) {
-    this.currentFilter.purpose = purpose;
-    this.currentFilter.onlyFavorites = false;
-    document.querySelectorAll('.search-tab-btn').forEach(btn => {
-      btn.classList.toggle('active', btn.getAttribute('data-purpose') === purpose);
-    });
-    this.renderAllProperties();
-  }
-
-  setCategoryChip(category) {
-    this.currentFilter.type = category;
-    this.currentFilter.onlyFavorites = false;
-    document.querySelectorAll('.chip-btn').forEach(btn => {
-      btn.classList.toggle('active', btn.getAttribute('data-category') === category);
-    });
-    this.renderAllProperties();
-  }
-
-  filterByNeighborhood(neighborhood) {
-    this.currentFilter.neighborhood = neighborhood;
-    this.renderAllProperties();
-    document.getElementById('catalogSection').scrollIntoView({ behavior: 'smooth' });
-    this.showToast(`Filtrando por: ${neighborhood}`);
-  }
-
-  resetFilters() {
-    this.currentFilter = {
-      purpose: 'todos',
-      type: 'todos',
-      neighborhood: 'todos',
-      maxPrice: Infinity,
-      keyword: '',
-      onlyFavorites: false
-    };
-    document.querySelectorAll('.chip-btn').forEach(b => b.classList.remove('active'));
-    const firstChip = document.querySelector('.chip-btn[data-category="todos"]');
-    if (firstChip) firstChip.classList.add('active');
-    
-    document.querySelectorAll('.search-tab-btn').forEach(b => b.classList.remove('active'));
-    const firstTab = document.querySelector('.search-tab-btn[data-purpose="todos"]');
-    if (firstTab) firstTab.classList.add('active');
-
-    const searchInput = document.getElementById('searchKeywordInput');
-    if (searchInput) searchInput.value = '';
-    
-    this.renderAllProperties();
-    this.showToast('Filtros limpos');
-  }
-
-  showFavoritesOnly() {
-    this.currentFilter.onlyFavorites = true;
-    this.renderAllProperties();
-    document.getElementById('catalogSection').scrollIntoView({ behavior: 'smooth' });
-    this.showToast(`Exibindo ${this.favorites.length} imóveis favoritados`);
   }
 
   // --- Helper & Utility Functions ---
@@ -530,7 +604,7 @@ class MeridionalApp {
 
     const toast = document.createElement('div');
     toast.className = 'toast-item';
-    toast.innerHTML = `<i class="fa-solid fa-bell" style="color: #14B8A6;"></i> <span>${message}</span>`;
+    toast.innerHTML = `<i class="fa-solid fa-circle-check" style="color: var(--primary);"></i> <span>${message}</span>`;
     container.appendChild(toast);
 
     setTimeout(() => {
@@ -541,7 +615,7 @@ class MeridionalApp {
   }
 
   setupEventListeners() {
-    // Search form submission
+    // Search Form Submission
     const searchForm = document.getElementById('mainSearchForm');
     if (searchForm) {
       searchForm.addEventListener('submit', (e) => {
@@ -553,9 +627,7 @@ class MeridionalApp {
         this.currentFilter.keyword = kw;
         this.currentFilter.neighborhood = neigh;
         this.currentFilter.type = type;
-        this.renderAllProperties();
-
-        document.getElementById('catalogSection').scrollIntoView({ behavior: 'smooth' });
+        this.executeSearch(true);
       });
     }
 
@@ -569,12 +641,9 @@ class MeridionalApp {
       });
     }
 
-    // Escape key
+    // Escape Key
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') this.closeModal();
     });
   }
 }
-
-// Global reference for HTML inline handlers
-window.meridionalApp = new MeridionalApp();
