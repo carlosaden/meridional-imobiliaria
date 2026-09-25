@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+  <meta name="theme-color" content="#0F766E" />
+  <title>Imobiliária Meridional | Imóveis em Uberaba MG - Venda, Aluguel e Lançamentos</title>
+
+  <!-- SEO & Open Graph Meta Tags -->
+  <meta name="description" content="A Imobiliária Meridional atua desde 1990 em Uberaba - MG com venda, locação, lançamentos e perícia de avaliação imobiliária nos melhores bairros e condomínios." />
+  <meta name="keywords" content="imobiliaria uberaba, imoveis uberaba, casas damha uberaba, apartamentos uberaba, aluguel uberaba, perito avaliador uberaba, financiamento caixa" />
+  <meta name="author" content="Imobiliária Meridional - CRECI 12632" />
+  <meta property="og:title" content="Imobiliária Meridional | Sua Imobiliária em Uberaba MG" />
+  <meta property="og:description" content="Encontre casas em condomínio, apartamentos e terrenos em Uberaba com atendimento personalizado e peritos credenciados." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://meridional.imb.br" />
+  <meta property="og:image" content="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80" />
+
+  <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <!-- Site Header -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="#" class="brand-logo" onclick="window.meridionalApp.resetFilters()">
+        <div class="brand-icon-box">
+          <i class="fa-solid fa-compass"></i>
+        </div>
+        <div>
+          <span>MERIDIONAL</span>
+          <span class="brand-badge">Desde 1990</span>
+        </div>
+      </a>
+
+      <!-- Desktop Navigation -->
+      <nav class="desktop-nav">
+        <a href="#destaques" class="nav-link">Destaques</a>
+        <a href="#catalogSection" class="nav-link" onclick="window.meridionalApp.resetFilters()">Imóveis</a>
+        <a href="#lancamentos" class="nav-link">Lançamentos</a>
+        <a href="#simulador" class="nav-link">Simulador Caixa</a>
+        <a href="#perito" class="nav-link">Perito Avaliador</a>
+        <a href="#anunciar" class="nav-link">Anunciar</a>
+        <a href="#quemsomos" class="nav-link">Quem Somos</a>
+      </nav>
+
+      <!-- Header Actions -->
+      <div class="header-actions">
+        <!-- Theme Toggle -->
+        <button id="themeToggleBtn" class="btn-icon-circle" onclick="window.meridionalApp.toggleTheme()" title="Alternar Modo Escuro / Claro">
+          <i class="fa-solid fa-moon"></i>
+        </button>
+
+        <!-- Favorites Counter (Desktop & Mobile) -->
+        <button class="btn-icon-circle" style="position: relative;" onclick="window.meridionalApp.showFavoritesOnly()" title="Meus Favoritos">
+          <i class="fa-solid fa-heart" style="color: #EF4444;"></i>
+          <span class="badge-count favorites-badge-count" style="display: none; position: absolute; top: -4px; right: -4px; background: #EF4444; color: #fff; font-size: 0.65rem; min-width: 18px; height: 18px; border-radius: 9px; align-items: center; justify-content: center; font-weight: 700;">0</span>
+        </button>
+
+        <!-- WhatsApp Quick CTA -->
+        <a href="https://api.whatsapp.com/send?phone=553499604600&text=Ol%C3%A1!%20Gostaria%20de%20falar%20com%20um%20corretor%20da%20Imobili%C3%A1ria%20Meridional." target="_blank" class="btn-header-cta">
+          <i class="fa-brands fa-whatsapp"></i> (34) 9960-4600
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section with Search -->
+  <section class="hero-section">
+    <div class="container">
+      <div class="hero-pill">
+        <i class="fa-solid fa-award"></i> 35 Anos de Tradição e Excelência em Uberaba - MG
+      </div>
+      <h1 class="hero-title">Encontre o imóvel ideal para a sua história</h1>
+      <p class="hero-subtitle">
+        Casas de luxo em condomínio fechado, apartamentos bem localizados, áreas comerciais e os melhores lançamentos imobiliários.
+      </p>
+
+      <!-- Search Card Wrapper -->
+      <div class="search-card-wrapper">
+        <!-- Purpose Tabs -->
+        <div class="search-tabs">
+          <button class="search-tab-btn active" data-purpose="todos" onclick="window.meridionalApp.setPurposeFilter('todos')">Todos os Imóveis</button>
+          <button class="search-tab-btn" data-purpose="venda" onclick="window.meridionalApp.setPurposeFilter('venda')">Comprar</button>
+          <button class="search-tab-btn" data-purpose="aluguel" onclick="window.meridionalApp.setPurposeFilter('aluguel')">Alugar</button>
+          <button class="search-tab-btn" data-purpose="lancamento" onclick="window.location.href='#lancamentos'">Lançamentos</button>
+        </div>
+
+        <!-- Search Form -->
+        <form id="mainSearchForm" class="search-grid">
+          <div class="search-field">
+            <label class="search-label" for="searchKeywordInput">Código ou Palavra-chave</label>
+            <div class="search-input-wrap">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input type="text" id="searchKeywordInput" class="search-input" placeholder="Ex: Damha, piscina, ME-3277..." />
+            </div>
+          </div>
+
+          <div class="search-field">
+            <label class="search-label" for="searchNeighborhoodSelect">Bairro em Uberaba</label>
+            <div class="search-input-wrap">
+              <i class="fa-solid fa-location-dot"></i>
+              <select id="searchNeighborhoodSelect" class="search-select">
+                <option value="todos">Todos os Bairros</option>
+                <option value="Damha II">Damha I, II e III</option>
+                <option value="Flamboyant">Flamboyant</option>
+                <option value="Mercês">Mercês</option>
+                <option value="Centro">Centro</option>
+                <option value="São Benedito">São Benedito</option>
+                <option value="Jardim Nenê Gomes">Jardim Nenê Gomes</option>
+                <option value="Parque das Américas">Parque das Américas</option>
+                <option value="Univerdecidade">Univerdecidade</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="search-field">
+            <label class="search-label" for="searchTypeSelect">Tipo de Imóvel</label>
+            <div class="search-input-wrap">
+              <i class="fa-solid fa-house"></i>
+              <select id="searchTypeSelect" class="search-select">
+                <option value="todos">Todos os Tipos</option>
+                <option value="casa">Casas</option>
+                <option value="condominio">Condomínios Fechados</option>
+                <option value="apartamento">Apartamentos</option>
+                <option value="comercial">Comerciais / Prédios</option>
+                <option value="terreno">Terrenos / Lotes</option>
+              </select>
+            </div>
+          </div>
+
+          <button type="submit" class="btn-search-submit">
+            <i class="fa-solid fa-search"></i> Buscar
+          </button>
+        </form>
+      </div>
+
+      <!-- Quick Category Chips -->
+      <div class="chips-container">
+        <button class="chip-btn active" data-category="todos" onclick="window.meridionalApp.setCategoryChip('todos')">
+          <i class="fa-solid fa-layer-group"></i> Todos
+        </button>
+        <button class="chip-btn" data-category="condominio" onclick="window.meridionalApp.setCategoryChip('condominio')">
+          <i class="fa-solid fa-shield-halved"></i> Condomínios Damha & Flamboyant
+        </button>
+        <button class="chip-btn" data-category="apartamento" onclick="window.meridionalApp.setCategoryChip('apartamento')">
+          <i class="fa-solid fa-building"></i> Apartamentos
+        </button>
+        <button class="chip-btn" data-category="casa" onclick="window.meridionalApp.setCategoryChip('casa')">
+          <i class="fa-solid fa-house-chimney"></i> Casas
+        </button>
+        <button class="chip-btn" data-category="comercial" onclick="window.meridionalApp.setCategoryChip('comercial')">
+          <i class="fa-solid fa-briefcase"></i> Comerciais & Galpões
+        </button>
+        <button class="chip-btn" data-category="terreno" onclick="window.meridionalApp.setCategoryChip('terreno')">
+          <i class="fa-solid fa-vector-square"></i> Terrenos
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Properties Section -->
+  <section id="destaques" class="section-padding">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <span class="section-tag">Seleção Especial</span>
+          <h2 class="section-title">Destaques da Meridional</h2>
+        </div>
+        <p class="section-desc">
+          Imóveis selecionados com excelente padrão construtivo, documentação pronta para transferência e alto potencial de valorização.
+        </p>
+      </div>
+
+      <div id="featuredPropertiesContainer" class="properties-grid">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Full Catalog Section with Live Filters -->
+  <section id="catalogSection" class="section-padding" style="background: var(--bg-card-subtle);">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <span class="section-tag">Catálogo Completo</span>
+          <h2 class="section-title">Explore Imóveis Disponíveis</h2>
+        </div>
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+          <button class="chip-btn" onclick="window.meridionalApp.resetFilters()">
+            <i class="fa-solid fa-rotate-right"></i> Redefinir
+          </button>
+          <button class="chip-btn" onclick="window.meridionalApp.showFavoritesOnly()">
+            <i class="fa-solid fa-heart" style="color:#EF4444;"></i> Ver Favoritos
+          </button>
+        </div>
+      </div>
+
+      <div id="catalogContainer" class="properties-grid">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Developments & Lançamentos Section -->
+  <section id="lancamentos" class="section-padding">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <span class="section-tag">Empreendimentos & Obras</span>
+          <h2 class="section-title">Lançamentos em Uberaba</h2>
+        </div>
+        <p class="section-desc">
+          Invista na planta ou garanta seu imóvel novo em condições facilitadas direto com as melhores construtoras e incorporadoras.
+        </p>
+      </div>
+
+      <div id="developmentsContainer" class="dev-carousel-wrap">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Caixa & Banks Loan Simulator -->
+  <section id="simulador" class="section-padding" style="background: var(--bg-card-subtle);">
+    <div class="container">
+      <div class="simulator-section">
+        <div class="simulator-grid">
+          <div>
+            <span class="section-tag">Planejamento Financeiro</span>
+            <h2 class="section-title" style="margin-top: 0.25rem; margin-bottom: 0.75rem;">Simulador de Financiamento Caixa & Bancos</h2>
+            <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 2rem;">
+              Simule as parcelas estimadas pelo Sistema de Amortização Constante (SAC). Aprovamos seu crédito imobiliário com agilidade e assessoria completa.
+            </p>
+
+            <!-- Property Value Slider -->
+            <div class="range-slider-group">
+              <div class="range-label-row">
+                <span>Valor do Imóvel:</span>
+                <span id="simPropValLabel" style="color: var(--primary);">R$ 500.000</span>
+              </div>
+              <input type="range" id="simPropertyValue" class="range-input" min="150000" max="4000000" step="25000" value="500000" />
+            </div>
+
+            <!-- Down Payment Slider -->
+            <div class="range-slider-group">
+              <div class="range-label-row">
+                <span>Valor da Entrada (%):</span>
+                <span id="simDownLabel" style="color: var(--accent);">R$ 100.000 (20%)</span>
+              </div>
+              <input type="range" id="simDownPayment" class="range-input" min="20" max="80" step="5" value="20" />
+            </div>
+
+            <!-- Term Months Select -->
+            <div class="search-field" style="margin-bottom: 1.5rem;">
+              <label class="search-label" for="simTermMonths">Prazo do Financiamento</label>
+              <select id="simTermMonths" class="search-select">
+                <option value="420">420 meses (35 anos)</option>
+                <option value="360" selected>360 meses (30 anos)</option>
+                <option value="240">240 meses (20 anos)</option>
+                <option value="180">180 meses (15 anos)</option>
+                <option value="120">120 meses (10 anos)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Calculated Results Card -->
+          <div class="calc-result-card">
+            <div>
+              <span style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; opacity: 0.8;">Estimativa de Financiamento (SAC)</span>
+              <h3 style="color: #fff; font-size: 1.4rem; margin-top: 0.25rem;">Resultado da Simulação</h3>
+            </div>
+
+            <div class="calc-stat-row">
+              <span class="calc-stat-label">Primeira Parcela (Estimada):</span>
+              <span id="simFirstInstallment" class="calc-stat-value highlight">R$ 4.378</span>
+            </div>
+
+            <div class="calc-stat-row">
+              <span class="calc-stat-label">Última Parcela (Estimada):</span>
+              <span id="simLastInstallment" class="calc-stat-value">R$ 1.120</span>
+            </div>
+
+            <div class="calc-stat-row">
+              <span class="calc-stat-label">Renda Familiar Mínima Recomendada:</span>
+              <span id="simMinIncome" class="calc-stat-value" style="color: #FCD34D;">R$ 14.593</span>
+            </div>
+
+            <div class="calc-stat-row" style="border: none;">
+              <span class="calc-stat-label">Valor Financiado:</span>
+              <span id="simLoanAmount" class="calc-stat-value">R$ 400.000</span>
+            </div>
+
+            <a id="simWhatsappShareBtn" href="#" target="_blank" class="btn-header-cta" style="background: #25D366; justify-content: center; width: 100%; margin-top: 0.5rem; box-shadow: 0 4px 15px rgba(37,211,102,0.4);">
+              <i class="fa-brands fa-whatsapp"></i> Aprovar Crédito no WhatsApp
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Perito Avaliador Judicial & Extrajudicial Section -->
+  <section id="perito" class="section-padding">
+    <div class="container">
+      <div class="property-card" style="padding: 2.5rem; background: linear-gradient(135deg, var(--bg-card), var(--bg-card-subtle));">
+        <div style="display: grid; grid-template-columns: 1fr; gap: 2rem; align-items: center;" class="perito-grid">
+          <div>
+            <span class="section-tag"><i class="fa-solid fa-scale-balanced"></i> Segurança Jurídica & Perícia</span>
+            <h2 class="section-title" style="margin-top: 0.35rem; margin-bottom: 1rem;">Perito Avaliador Imobiliário Credenciado CNAI</h2>
+            <p style="color: var(--text-main); font-size: 1rem; line-height: 1.6; margin-bottom: 1rem;">
+              Sob a liderança de <strong>Antonio Carlos Mendes</strong> (CRECI 12.632 / CNAI), a Imobiliária Meridional realiza <strong>Pareceres Técnicos de Avaliação Mercadológica (PTAM)</strong> com validade judicial e extrajudicial em conformidade com as normas ABNT NBR 14.653.
+            </p>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; margin-bottom: 1.5rem;">
+              <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;">
+                <i class="fa-solid fa-check" style="color: var(--primary);"></i> Inventários e Partilhas
+              </div>
+              <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;">
+                <i class="fa-solid fa-check" style="color: var(--primary);"></i> Desapropriações e Renovatórias
+              </div>
+              <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;">
+                <i class="fa-solid fa-check" style="color: var(--primary);"></i> Garantias Bancárias e Hipotecas
+              </div>
+              <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem;">
+                <i class="fa-solid fa-check" style="color: var(--primary);"></i> Avaliação Patrimonial para Empresas
+              </div>
+            </div>
+            <a href="https://api.whatsapp.com/send?phone=553499604600&text=Ol%C3%A1!%20Gostaria%20de%20solicitar%20uma%20avalia%C3%A7%C3%A3o%20t%C3%A9cnica%20de%20im%C3%B3vel%20com%20o%20Perito%20Avaliador." target="_blank" class="btn-header-cta">
+              <i class="fa-brands fa-whatsapp"></i> Solicitar Laudo de Avaliação
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- "Cadastre seu Imóvel" (Owner Lead Generator) -->
+  <section id="anunciar" class="section-padding" style="background: var(--bg-card-subtle);">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <span class="section-tag">Para Proprietários</span>
+          <h2 class="section-title">Anuncie seu Imóvel na Meridional</h2>
+        </div>
+        <p class="section-desc">
+          Coloque seu patrimônio nas mãos de corretores experientes com divulgação nos principais portais e assessoria jurídica completa.
+        </p>
+      </div>
+
+      <div class="owner-wizard-card">
+        <form id="ownerWizardForm" style="display: flex; flex-direction: column; gap: 1.25rem;">
+          <div style="display: grid; grid-template-columns: 1fr; gap: 1rem;" class="form-grid-2">
+            <div class="search-field">
+              <label class="search-label" for="wizOwnerName">Seu Nome Completo *</label>
+              <input type="text" id="wizOwnerName" class="search-input" placeholder="Ex: João da Silva" required />
+            </div>
+            <div class="search-field">
+              <label class="search-label" for="wizOwnerPhone">Seu WhatsApp / Telefone *</label>
+              <input type="tel" id="wizOwnerPhone" class="search-input" placeholder="(34) 99999-9999" required />
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr; gap: 1rem;" class="form-grid-3">
+            <div class="search-field">
+              <label class="search-label" for="wizOwnerPurpose">Finalidade *</label>
+              <select id="wizOwnerPurpose" class="search-select">
+                <option value="Venda">Vender Imóvel</option>
+                <option value="Locação">Alugar Imóvel</option>
+                <option value="Avaliação">Avaliar Imóvel</option>
+              </select>
+            </div>
+            <div class="search-field">
+              <label class="search-label" for="wizOwnerType">Tipo de Imóvel *</label>
+              <select id="wizOwnerType" class="search-select">
+                <option value="Casa em Condomínio">Casa em Condomínio Fechado</option>
+                <option value="Casa Tradicional">Casa de Rua</option>
+                <option value="Apartamento">Apartamento</option>
+                <option value="Comercial">Imóvel Comercial / Galpão</option>
+                <option value="Terreno">Terreno / Lote</option>
+              </select>
+            </div>
+            <div class="search-field">
+              <label class="search-label" for="wizOwnerNeighborhood">Bairro em Uberaba *</label>
+              <input type="text" id="wizOwnerNeighborhood" class="search-input" placeholder="Ex: Damha, Mercês, Centro" required />
+            </div>
+          </div>
+
+          <div class="search-field">
+            <label class="search-label" for="wizOwnerPrice">Valor Estimado / Pretendido (R$)</label>
+            <input type="text" id="wizOwnerPrice" class="search-input" placeholder="Ex: 650.000" />
+          </div>
+
+          <button type="submit" class="btn-search-submit" style="align-self: flex-start; padding: 0 2.5rem;">
+            <i class="fa-solid fa-paper-plane"></i> Enviar Cadastro para Análise
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- Neighborhood Guide Section -->
+  <section class="section-padding">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <span class="section-tag">Guia de Localização</span>
+          <h2 class="section-title">Principais Bairros de Uberaba</h2>
+        </div>
+        <p class="section-desc">
+          Conheça as regiões mais desejadas da cidade e clique para filtrar os imóveis disponíveis em cada bairro.
+        </p>
+      </div>
+
+      <div id="neighborhoodsContainer" class="properties-grid">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Quem Somos Section -->
+  <section id="quemsomos" class="section-padding" style="background: var(--bg-card-subtle);">
+    <div class="container">
+      <div style="display: grid; grid-template-columns: 1fr; gap: 2.5rem; align-items: center;" class="quemsomos-grid">
+        <div>
+          <span class="section-tag">Nossa História</span>
+          <h2 class="section-title" style="margin-top: 0.35rem; margin-bottom: 1rem;">35 Anos Construindo Confiança no Triângulo Mineiro</h2>
+          <p style="color: var(--text-main); font-size: 1rem; line-height: 1.6; margin-bottom: 1rem;">
+            Fundada em <strong>1990</strong> na Rua Vigário Silva e hoje sediada na nobre <strong>Praça Dom Eduardo, 470 – Mercês</strong>, a Meridional Corretores Associados formou uma equipe sólida de profissionais preparados para atuar com excelência em compra, venda, locação e lançamentos.
+          </p>
+          <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; margin-bottom: 1.5rem;">
+            Mantemos departamento jurídico especializado disponível para sanar quaisquer dúvidas e prestar assessoria em todas as etapas, assegurando máxima tranquilidade e solidez nas transações.
+          </p>
+
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; text-align: center;">
+            <div style="background: var(--bg-card); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-light);">
+              <span style="font-size: 1.75rem; font-weight: 800; color: var(--primary); display: block;">+35</span>
+              <span style="font-size: 0.78rem; color: var(--text-muted); font-weight: 600;">Anos de Mercado</span>
+            </div>
+            <div style="background: var(--bg-card); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-light);">
+              <span style="font-size: 1.75rem; font-weight: 800; color: var(--primary); display: block;">+800</span>
+              <span style="font-size: 0.78rem; color: var(--text-muted); font-weight: 600;">Imóveis Cadastrados</span>
+            </div>
+            <div style="background: var(--bg-card); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-light);">
+              <span style="font-size: 1.75rem; font-weight: 800; color: var(--primary); display: block;">100%</span>
+              <span style="font-size: 0.78rem; color: var(--text-muted); font-weight: 600;">Suporte Jurídico</span>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <img src="https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1000&q=80" alt="Imobiliária Meridional Sede" style="border-radius: var(--radius-lg); box-shadow: var(--shadow-xl);" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Blog & Dicas Imobiliárias -->
+  <section class="section-padding">
+    <div class="container">
+      <div class="section-header">
+        <div>
+          <span class="section-tag">Blog & Notícias</span>
+          <h2 class="section-title">Dicas do Mercado Imobiliário</h2>
+        </div>
+        <p class="section-desc">
+          Conteúdos e orientações práticas sobre financiamentos, perícias, documentação e investimentos em Uberaba.
+        </p>
+      </div>
+
+      <div id="blogContainer" class="properties-grid">
+        <!-- Rendered dynamically -->
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer Section -->
+  <footer id="contato" class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <a href="#" class="brand-logo" style="color: #fff; margin-bottom: 1rem;">
+            <div class="brand-icon-box">
+              <i class="fa-solid fa-compass"></i>
+            </div>
+            <span>MERIDIONAL</span>
+          </a>
+          <p style="font-size: 0.88rem; line-height: 1.6; margin-bottom: 1.25rem;">
+            A sua imobiliária de confiança em Uberaba desde 1990. Especialistas em vendas, locações, condomínios fechados, lançamentos e perícias judiciais.
+          </p>
+          <div style="display: flex; gap: 0.75rem;">
+            <a href="https://www.instagram.com/meridionaluberaba/" target="_blank" class="btn-icon-circle" style="background: rgba(255,255,255,0.1); color: #fff; border-color: rgba(255,255,255,0.2);">
+              <i class="fa-brands fa-instagram"></i>
+            </a>
+            <a href="https://www.facebook.com/Meridional-178539326352585" target="_blank" class="btn-icon-circle" style="background: rgba(255,255,255,0.1); color: #fff; border-color: rgba(255,255,255,0.2);">
+              <i class="fa-brands fa-facebook-f"></i>
+            </a>
+            <a href="https://api.whatsapp.com/send?phone=553499604600" target="_blank" class="btn-icon-circle" style="background: #25D366; color: #fff; border-color: transparent;">
+              <i class="fa-brands fa-whatsapp"></i>
+            </a>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="footer-title">Navegação</h4>
+          <ul class="footer-links">
+            <li><a href="#destaques" class="footer-link">Imóveis em Destaque</a></li>
+            <li><a href="#catalogSection" class="footer-link">Venda & Locação</a></li>
+            <li><a href="#lancamentos" class="footer-link">Empreendimentos Novos</a></li>
+            <li><a href="#simulador" class="footer-link">Simulador Habitacional</a></li>
+            <li><a href="#perito" class="footer-link">Perito Avaliador (CNAI)</a></li>
+            <li><a href="#anunciar" class="footer-link">Cadastre seu Imóvel</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-title">Bairros & Condomínios</h4>
+          <ul class="footer-links">
+            <li><a href="javascript:void(0)" onclick="window.meridionalApp.filterByNeighborhood('Damha II')" class="footer-link">Damha I, II e III</a></li>
+            <li><a href="javascript:void(0)" onclick="window.meridionalApp.filterByNeighborhood('Flamboyant')" class="footer-link">Flamboyant</a></li>
+            <li><a href="javascript:void(0)" onclick="window.meridionalApp.filterByNeighborhood('Mercês')" class="footer-link">Mercês</a></li>
+            <li><a href="javascript:void(0)" onclick="window.meridionalApp.filterByNeighborhood('Centro')" class="footer-link">Centro</a></li>
+            <li><a href="javascript:void(0)" onclick="window.meridionalApp.filterByNeighborhood('São Benedito')" class="footer-link">São Benedito</a></li>
+            <li><a href="javascript:void(0)" onclick="window.meridionalApp.filterByNeighborhood('Univerdecidade')" class="footer-link">Univerdecidade</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="footer-title">Atendimento & Sede</h4>
+          <p style="font-size: 0.88rem; line-height: 1.6; margin-bottom: 0.75rem;">
+            <i class="fa-solid fa-location-dot" style="color: #14B8A6;"></i> Praça Dom Eduardo, 470 – Mercês<br />
+            CEP 38060-280 — Uberaba / MG
+          </p>
+          <p style="font-size: 0.88rem; line-height: 1.6; margin-bottom: 0.75rem;">
+            <i class="fa-solid fa-phone" style="color: #14B8A6;"></i> (34) 3312-6702<br />
+            <i class="fa-brands fa-whatsapp" style="color: #25D366;"></i> Plantão: (34) 9960-4600
+          </p>
+          <p style="font-size: 0.88rem; line-height: 1.6;">
+            <i class="fa-solid fa-envelope" style="color: #14B8A6;"></i> meridionaluberaba@gmail.com<br />
+            <i class="fa-solid fa-id-card" style="color: #14B8A6;"></i> CRECI 12.632 - 4ª Região / MG
+          </p>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>© 2026 Imobiliária Meridional — Todos os direitos reservados. CRECI 12.632/MG.</p>
+        <p>Recriado com UI/UX Pro Max • Mobile-First Experience</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Mobile Bottom Navigation Bar -->
+  <nav class="mobile-bottom-nav">
+    <a href="#" class="bottom-nav-item active" onclick="window.meridionalApp.resetFilters()">
+      <i class="fa-solid fa-house"></i>
+      <span>Início</span>
+    </a>
+    <a href="#catalogSection" class="bottom-nav-item" onclick="window.meridionalApp.resetFilters()">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <span>Buscar</span>
+    </a>
+    <a href="javascript:void(0)" class="bottom-nav-item" onclick="window.meridionalApp.showFavoritesOnly()">
+      <i class="fa-solid fa-heart"></i>
+      <span>Favoritos</span>
+      <span class="badge-count favorites-badge-count" style="display: none;">0</span>
+    </a>
+    <a href="#anunciar" class="bottom-nav-item">
+      <i class="fa-solid fa-circle-plus"></i>
+      <span>Anunciar</span>
+    </a>
+    <a href="https://api.whatsapp.com/send?phone=553499604600&text=Ol%C3%A1!%20Gostaria%20de%20atendimento%20imobili%C3%A1rio." target="_blank" class="bottom-nav-item">
+      <i class="fa-brands fa-whatsapp" style="color: #25D366;"></i>
+      <span>Contato</span>
+    </a>
+  </nav>
+
+  <!-- Floating WhatsApp Action Button -->
+  <a href="https://api.whatsapp.com/send?phone=553499604600&text=Ol%C3%A1!%20Estou%20no%20site%20da%20Imobili%C3%A1ria%20Meridional%20e%20gostaria%20de%20informa%C3%A7%C3%B5es." target="_blank" class="floating-whatsapp" title="Fale com nosso Plantão no WhatsApp">
+    <div class="whatsapp-pulse"></div>
+    <i class="fa-brands fa-whatsapp"></i>
+  </a>
+
+  <!-- Property Detail Modal -->
+  <div id="propertyDetailModal" class="modal-overlay">
+    <div class="modal-sheet">
+      <button id="modalCloseBtn" class="modal-close-btn" title="Fechar Modal">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <div id="modalContent">
+        <!-- Injected via JavaScript -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/simulator.js"></script>
+  <script src="js/app.js"></script>
+
+  <!-- Responsive Form Grid Media Query Overrides -->
+  <style>
+    @media (min-width: 768px) {
+      .form-grid-2 { grid-template-columns: 1fr 1fr !important; }
+      .form-grid-3 { grid-template-columns: 1fr 1fr 1fr !important; }
+      .quemsomos-grid { grid-template-columns: 1.2fr 1fr !important; }
+    }
+  </style>
+</body>
+</html>
