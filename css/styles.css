@@ -1942,31 +1942,95 @@ h1, h2, h3, h4, h5, h6 {
   border-color: var(--primary);
 }
 
+.gallery-thumbs-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: var(--bg-card-subtle);
+  border-top: 1px solid var(--border-light);
+  border-radius: 0 0 var(--radius-xl) var(--radius-xl);
+  padding: 0.6rem 0.75rem;
+}
+
 .gallery-thumbs-row {
   display: flex;
   gap: 0.75rem;
-  padding: 0.85rem 1rem;
+  padding: 0.4rem 0.25rem;
   overflow-x: auto;
-  background: var(--bg-card-subtle);
-  border-top: 1px solid var(--border-light);
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary) transparent;
+}
+
+.gallery-thumbs-row::-webkit-scrollbar {
+  height: 5px;
+}
+
+.gallery-thumbs-row::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 9999px;
+}
+
+.gallery-thumbs-row::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 9999px;
+}
+
+.thumbs-scroll-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--bg-card);
+  color: var(--text-main);
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+  z-index: 2;
+}
+
+.thumbs-scroll-btn:hover {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+  transform: scale(1.08);
+}
+
+.thumbs-scroll-btn:active {
+  transform: scale(0.95);
+}
+
+.thumbs-scroll-btn.prev {
+  margin-right: 0.5rem;
+}
+
+.thumbs-scroll-btn.next {
+  margin-left: 0.5rem;
 }
 
 .gallery-thumb-item {
-  width: 80px;
-  height: 60px;
+  width: 88px;
+  height: 64px;
   border-radius: var(--radius-sm);
   overflow: hidden;
   cursor: pointer;
   border: 2px solid transparent;
   flex-shrink: 0;
-  opacity: 0.65;
-  transition: all 0.2s ease;
+  opacity: 0.7;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .gallery-thumb-item.active, .gallery-thumb-item:hover {
   border-color: var(--primary);
   opacity: 1;
-  transform: scale(1.05);
+  transform: scale(1.06);
+  box-shadow: 0 4px 12px rgba(255, 122, 0, 0.25);
 }
 
 .gallery-thumb-item img {

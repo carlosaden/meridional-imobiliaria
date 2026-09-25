@@ -579,12 +579,20 @@ class MeridionalApp {
                 <i class="fa-solid fa-expand"></i> Ver ${this.lightboxImages.length} fotos em tela cheia
               </button>
             </div>
-            <div class="gallery-thumbs-row">
-              ${this.lightboxImages.map((img, idx) => `
-                <div class="gallery-thumb-item ${idx === 0 ? 'active' : ''}" onclick="window.meridionalApp.selectDetailThumb('${img}', this, ${idx})">
-                  <img src="${img}" alt="Foto ${idx + 1}" />
-                </div>
-              `).join('')}
+            <div class="gallery-thumbs-wrapper">
+              <button type="button" class="thumbs-scroll-btn prev" onclick="window.meridionalApp.scrollThumbs(-220)" aria-label="Fotos anteriores" title="Fotos anteriores">
+                <i class="fa-solid fa-chevron-left"></i>
+              </button>
+              <div class="gallery-thumbs-row" id="galleryThumbsRow">
+                ${this.lightboxImages.map((img, idx) => `
+                  <div class="gallery-thumb-item ${idx === 0 ? 'active' : ''}" data-index="${idx}" onclick="window.meridionalApp.selectDetailThumb('${img}', this, ${idx})">
+                    <img src="${img}" alt="Foto ${idx + 1}" loading="lazy" />
+                  </div>
+                `).join('')}
+              </div>
+              <button type="button" class="thumbs-scroll-btn next" onclick="window.meridionalApp.scrollThumbs(220)" aria-label="Próximas fotos" title="Próximas fotos">
+                <i class="fa-solid fa-chevron-right"></i>
+              </button>
             </div>
           </div>
 
@@ -720,13 +728,37 @@ class MeridionalApp {
 
     // Renderiza Imóveis Relacionados
     this.renderRelatedProperties(prop);
+    this.setupThumbsWheelScroll();
+  }
+
+  setupThumbsWheelScroll() {
+    const row = document.getElementById('galleryThumbsRow');
+    if (!row) return;
+    row.addEventListener('wheel', (e) => {
+      if (e.deltaY !== 0) {
+        e.preventDefault();
+        row.scrollLeft += e.deltaY;
+      }
+    }, { passive: false });
+  }
+
+  scrollThumbs(delta) {
+    this.triggerHaptic();
+    const row = document.getElementById('galleryThumbsRow');
+    if (row) {
+      row.scrollBy({ left: delta, behavior: 'smooth' });
+    }
   }
 
   selectDetailThumb(imgSrc, thumbEl, idx) {
+    this.triggerHaptic();
     const main = document.getElementById('detailMainImage');
     if (main) main.src = imgSrc;
     document.querySelectorAll('.gallery-thumb-item').forEach(t => t.classList.remove('active'));
-    if (thumbEl) thumbEl.classList.add('active');
+    if (thumbEl) {
+      thumbEl.classList.add('active');
+      thumbEl.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    }
   }
 
   copyPropertyCode(code) {
