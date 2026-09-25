@@ -36,7 +36,24 @@ class MeridionalApp {
     this.updateFavoritesCount();
     this.setupScrollToTop();
 
-    // Se estiver na Home
+    // 1. Página de Detalhes do Imóvel (imovel.html)
+    if (document.getElementById('propertyDetailContainer')) {
+      const params = new URLSearchParams(window.location.search);
+      const propId = params.get('id') || params.get('codigo') || 'ME-3277';
+      this.renderPropertyDetailPage(propId);
+    }
+
+    // 2. Catálogo de Imóveis (imoveis.html)
+    if (document.getElementById('catalogPropertiesGrid')) {
+      this.initCatalogPage();
+    }
+
+    // 3. Meus Favoritos (favoritos.html)
+    if (document.getElementById('favoritesGrid')) {
+      this.renderFavoritesPage();
+    }
+
+    // 4. Página Inicial (index.html)
     if (document.getElementById('damhaRow')) {
       this.initHomePage();
     }
@@ -388,10 +405,18 @@ class MeridionalApp {
     const container = document.getElementById('propertyDetailContainer');
     if (!container) return;
 
-    const prop = this.properties.find(p => 
-      p.code.toLowerCase() === codeOrId.toLowerCase() || 
-      p.id === codeOrId
-    ) || this.properties[0];
+    if (!codeOrId) codeOrId = 'ME-3277';
+    const cleanQuery = codeOrId.toString().toLowerCase().trim().replace('me-', '').replace('me', '');
+
+    const prop = this.properties.find(p => {
+      const pCode = (p.code || '').toLowerCase().trim();
+      const pId = (p.id || '').toString().toLowerCase().trim();
+      const pCodeNum = pCode.replace('me-', '').replace('me', '');
+      return pCode === codeOrId.toString().toLowerCase().trim() ||
+             pId === codeOrId.toString().toLowerCase().trim() ||
+             pCodeNum === cleanQuery ||
+             pId === cleanQuery;
+    }) || this.properties[0];
 
     if (!prop) {
       container.innerHTML = `
